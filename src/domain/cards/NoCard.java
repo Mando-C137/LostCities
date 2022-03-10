@@ -27,4 +27,10 @@ public class NoCard extends AbstractCard {
     return "--";
   }
 
+  @Override
+  public int compareTo(AbstractCard o) {
+    // TODO Auto-generated method stub
+    return -1;
+  }
+
 }

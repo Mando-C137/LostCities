@@ -36,7 +36,7 @@ public class NumberCard extends AbstractCard {
    */
   @Override
   public String toString() {
-    return " " + this.color.toString().substring(0, 1) + "" + this.val;
+    return " " + this.getColor().toString().substring(0, 1) + "" + this.val;
 
   }
 
@@ -45,6 +45,20 @@ public class NumberCard extends AbstractCard {
    */
   public int getValue() {
     return this.val;
+  }
+
+  @Override
+  public int compareTo(AbstractCard o) {
+
+    if (!o.isNumber()) {
+      return this.getValue();
+    } else {
+      NumberCard numCard = (NumberCard) o;
+      return this.getValue() - numCard.getValue();
+    }
+
+
+
   }
 
 

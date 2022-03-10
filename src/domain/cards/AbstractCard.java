@@ -6,12 +6,12 @@ package domain.cards;
  * @author paulh
  *
  */
-public abstract class AbstractCard {
+public abstract class AbstractCard implements Comparable<AbstractCard> {
 
   /**
    * Jede Karte hat eine Farbe
    */
-  final Color color;
+  private final Color color;
 
   /**
    * lediglich setzen der Farbe
@@ -20,7 +20,6 @@ public abstract class AbstractCard {
    */
   public AbstractCard(Color color) {
     this.color = color;
-
   }
 
   /**
@@ -41,10 +40,12 @@ public abstract class AbstractCard {
   @Override
   public boolean equals(Object obj) {
 
-    if (obj == null) {
+    if (obj == null || this == null) {
       return false;
     }
-
+    if (!obj.getClass().equals(this.getClass())) {
+      return false;
+    }
     return this.toString().equals(obj.toString());
   }
 

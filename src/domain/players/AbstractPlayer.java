@@ -1,8 +1,10 @@
 package domain.players;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Stream;
 import domain.Game;
@@ -30,6 +32,8 @@ public abstract class AbstractPlayer {
   private LinkedList<AbstractCard> handKarten;
 
   protected Stapel lastPlay;
+
+  protected Map<Color, Stack<AbstractCard>> enemyEx;
 
   public AbstractPlayer(Game game, String name) {
     this.game = game;
@@ -69,35 +73,11 @@ public abstract class AbstractPlayer {
 
   public abstract Stapel chooseStapel();
 
-  // /**
-  // * Ziehen einer Karte. Momentan wird nur vom Nachziehstapel gezogen TODO
-  // */
-  // public void drawCard() {
-  // Optional<AbstractCard> opt = game.returnCardFromNachziehStapel();
-  //
-  // if (opt.isPresent()) {
-  // this.handKarten.add(opt.get());
-  // } else {
-  // System.out.println("Problem beim Ziehen der Karte");
-  // }
-  //
-  // }
-  //
-  // public void drawCard(Stapel stapel) {
-  // Optional<AbstractCard> opt = game.returnCard(stapel);
-  //
-  // if (opt.isPresent()) {
-  // this.handKarten.add(opt.get());
-  // } else {
-  // System.out.println("Problem beim Ziehen der Karte");
-  // }
-  //
-  // }
+  public abstract boolean isAI();
 
   public LinkedList<Stapel> getDrawSet() {
 
     LinkedList<Stapel> result = new LinkedList<Stapel>();
-
 
     for (Color c : Color.orderedColors) {
       if (this.game.getAblageStapel(c).size() > 0) {
@@ -115,15 +95,6 @@ public abstract class AbstractPlayer {
     this.lastPlay = null;
     return result;
   }
-
-  // /**
-  // * Getter für die game instanz
-  // *
-  // * @return
-  // */
-  // public Game getGame() {
-  // return this.game;
-  // }
 
   /**
    * Getter für die expeditionen des Spielers. Sollte eigentlich unmodifiable sein.
@@ -240,6 +211,13 @@ public abstract class AbstractPlayer {
       this.lastPlay = abs;
   }
 
+  public void setEnemyExpeditions(AbstractPlayer abs) {
+    this.enemyEx = Collections.unmodifiableMap(abs.getExpeditionen());
+  }
+
+  public Map<Color, Stack<AbstractCard>> getEnemyExp() {
+    return this.enemyEx;
+  }
 
 
 }

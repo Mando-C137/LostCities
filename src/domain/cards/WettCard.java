@@ -21,6 +21,19 @@ public class WettCard extends AbstractCard {
 
   @Override
   public String toString() {
-    return " J" + this.color.toString().substring(0, 1);
+    return " J" + this.getColor().toString().substring(0, 1);
+  }
+
+  @Override
+  public int compareTo(AbstractCard o) {
+
+    if (!o.isNumber()) {
+      return 0;
+    } else if (o.isNumber()) {
+      NumberCard num = (NumberCard) o;
+      return -num.getValue();
+    }
+
+    return 0;
   }
 }

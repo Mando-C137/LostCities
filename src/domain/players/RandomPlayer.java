@@ -47,4 +47,10 @@ public class RandomPlayer extends AbstractPlayer {
     return res;
   }
 
+  @Override
+  public boolean isAI() {
+    // TODO Auto-generated method stub
+    return true;
+  }
+
 }

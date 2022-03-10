@@ -39,4 +39,10 @@ public class InputPlayer extends AbstractPlayer {
 
   }
 
+  @Override
+  public boolean isAI() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
 }

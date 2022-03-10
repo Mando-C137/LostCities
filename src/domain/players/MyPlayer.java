@@ -23,4 +23,11 @@ public class MyPlayer extends AbstractPlayer {
     return null;
   }
 
+
+  @Override
+  public boolean isAI() {
+    // TODO Auto-generated method stub
+    return true;
+  }
+
 }

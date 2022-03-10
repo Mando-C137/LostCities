@@ -23,14 +23,13 @@ import domain.cards.WettCard;
 import domain.players.AbstractPlayer;
 import domain.players.InputPlayer;
 import domain.players.PlayOption;
-import domain.players.RandomPlayer;
+import domain.players.ai.SimpleAi;
 
 /**
  * Die Gameinstanz, von der man das Spiel steuert und Referenzen auf alle nötigen Objekte hat.
  *
  */
 public class Game {
-
 
   /**
    * Der Nachziehstapel
@@ -60,8 +59,6 @@ public class Game {
    */
   public Game() {
     this.gameEnd = false;
-
-
     initStaepel();
     generateNachziehStapel();
     initPlayers();
@@ -69,7 +66,7 @@ public class Game {
   }
 
   private void initPlayers() {
-    AbstractPlayer abs = new RandomPlayer(this);
+    AbstractPlayer abs = new SimpleAi(this);
 
     this.players = new ArrayList<AbstractPlayer>();
     this.players.add(abs);
@@ -77,8 +74,12 @@ public class Game {
 
     for (AbstractPlayer player : players) {
       IntStream.range(0, 8).forEach(num -> this.addCardtoPlayer(Stapel.NACHZIEHSTAPEL, player));
-
     }
+
+
+    // Wichtig dass der Spieler die Expeditionen des Gegners ansehen kann
+    this.players.get(0).setEnemyExpeditions(this.players.get(1));
+    this.players.get(1).setEnemyExpeditions(this.players.get(0));
 
     // TODO hier müssten dann der KI Spieler hinzugefüegt werden.
   }
@@ -102,13 +103,9 @@ public class Game {
     Random rand = new Random();
     while (!allCards.isEmpty()) {
       AbstractCard remove = allCards.remove(rand.nextInt(allCards.size()));
-
-
       this.nachZiehStapel.add(remove);
 
     }
-
-
 
   }
 
@@ -264,7 +261,7 @@ public class Game {
         player.getName() + " will spielen: " + play.getCard() + " auf " + play.getStapel());
 
     if (!play.getCard().getColor().equals(play.getStapel().getColor())) {
-      System.out.println("FAil");
+      System.out.println("Fail");
       return;
     }
 
@@ -281,20 +278,16 @@ public class Game {
         player.getHandKarten().remove(cardToPlay);
         player.getExpeditionen().get(cardToPlay.getColor()).push(cardToPlay);
       } else {
-        System.out.println("Geht nicht");
+        System.out.println(
+            "Karte " + cardToPlay + "darf nicht auf " + play.getStapel() + "abgelegt werden.");
         return;
       }
     } else {
-
       player.getHandKarten().remove(cardToPlay);
       this.ablageStaepels.get(cardToPlay.getColor()).push(cardToPlay);
-
-
     }
 
     player.setLastPlay(play.getStapel());
-
-
 
   }
 
@@ -377,7 +370,6 @@ public class Game {
         return this.ablageStaepels.get(Color.YELLOW);
       case NACHZIEHSTAPEL:
         return this.nachZiehStapel;
-
       default:
         System.out.println("kann nicht von einer Expedition ziehen");
         return null;
