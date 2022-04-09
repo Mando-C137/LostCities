@@ -3,12 +3,12 @@ package userinterface;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-import domain.Game;
 import domain.cards.AbstractCard;
 import domain.cards.Color;
 import domain.cards.Stapel;
+import domain.main.Game;
+import domain.main.PlayOption;
 import domain.players.AbstractPlayer;
-import domain.players.PlayOption;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -48,13 +48,13 @@ public class GameScene extends AnchorPane {
 
   private static final int height = 110;
 
-  public GameScene() {
+  public GameScene(Game theGame) {
 
     super();
     this.setPrefHeight(600);
     this.setPrefWidth(600);
     initStaepels();
-    this.game = new Game();
+    this.game = theGame;
     this.drawMode = false;
     this.playMode = false;
     this.myPlayer = game.getPlayers().get(1);
@@ -65,6 +65,7 @@ public class GameScene extends AnchorPane {
 
     update();
     addButton();
+
   }
 
   private void addButton() {
@@ -77,7 +78,13 @@ public class GameScene extends AnchorPane {
     b.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent e) {
+
+        // ProgressIndicator progress = new ProgressIndicator();
+        // temp.getChildren().add(progress);
+        // progress.setLayoutX(30);
+        // progress.setLayoutY(30);
         game.externalRound(opp);
+
         playMode = true;
         drawMode = false;
         update();
@@ -85,7 +92,6 @@ public class GameScene extends AnchorPane {
 
       }
     });
-
 
 
   }
@@ -97,16 +103,51 @@ public class GameScene extends AnchorPane {
   }
 
   private void update() {
+
     this.middle.update();
-    updateCards();
+    this.updateCards();
     if (drawMode) {
       middle.activateDraw();
     }
 
     updateScores();
+    System.out.println(this.opp.getHandKarten());
   }
 
 
+
+  private void addNewGameButton() {
+
+    Button newGameButton = new Button("Start new Game");
+    newGameButton.setLayoutX(200);
+    newGameButton.setLayoutY(15);
+
+
+    newGameButton.setOnAction(event -> {
+
+      this.getChildren().removeAll(this.getChildren());
+
+
+
+      initStaepels();
+      this.game = Game.SimpleVsMe();
+      this.drawMode = false;
+      this.playMode = false;
+      this.myPlayer = game.getPlayers().get(1);
+      this.opp = game.getPlayers().get(0);
+      this.middle = new AblageLabels(game, this);
+      this.myEx = new MyExpeditionenLabels(myPlayer, this);
+      this.oppEx = new OppExpeditionenLabels(this, opp);
+
+      update();
+      addButton();
+
+
+    });
+
+    this.getChildren().add(newGameButton);
+
+  }
 
   private void initStaepels() {
     Group recs = new Group();
@@ -174,6 +215,12 @@ public class GameScene extends AnchorPane {
       this.playMode = false;
       this.drawMode = false;
     }
+
+    if (game.getGameEnd()) {
+      this.playMode = false;
+      this.drawMode = false;
+      this.addNewGameButton();
+    }
     update();
   }
 
@@ -232,7 +279,7 @@ public class GameScene extends AnchorPane {
   public void updateScores() {
     String scores = this.game.calculateScores();
 
-    if (this.scoreBoard == null) {
+    if (this.scoreBoard == null || !this.getChildren().contains(scoreBoard)) {
       this.scoreBoard = new Label();
       this.scoreBoard.setLayoutX(380);
       this.scoreBoard.setLayoutY(10);
@@ -243,7 +290,6 @@ public class GameScene extends AnchorPane {
               + "fx-font-family: Calibri;" + "-fx-border-width: 2; " + "-fx-border-color: brown; ");
       this.scoreBoard.setPrefWidth(200);
       this.getChildren().add(scoreBoard);
-
     }
 
     this.scoreBoard.setText(scores);

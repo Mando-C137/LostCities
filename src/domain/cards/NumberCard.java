@@ -10,7 +10,7 @@ package domain.cards;
 public class NumberCard extends AbstractCard {
 
   /**
-   * Der Wert für die karte
+   * Der Wert für die Karte
    */
   final int val;
 
@@ -51,12 +51,47 @@ public class NumberCard extends AbstractCard {
   public int compareTo(AbstractCard o) {
 
     if (!o.isNumber()) {
+
+      if (this.val == 2) {
+        return 1;
+      }
+
       return this.getValue();
     } else {
       NumberCard numCard = (NumberCard) o;
       return this.getValue() - numCard.getValue();
     }
 
+
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+
+    if (this == null || o == null) {
+      return false;
+    }
+
+    if (o.getClass() != this.getClass()) {
+      return false;
+    }
+
+
+    AbstractCard a = (AbstractCard) o;
+
+    if (!a.isNumber()) {
+      return false;
+    }
+
+    if (!a.getColor().equals(this.getColor())) {
+      return false;
+    }
+
+    NumberCard num = (NumberCard) a;
+
+    return num.val == this.val;
 
 
   }

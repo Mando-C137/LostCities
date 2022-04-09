@@ -1,17 +1,17 @@
 package domain.players;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Stream;
-import domain.Game;
 import domain.cards.AbstractCard;
 import domain.cards.Color;
-import domain.cards.NumberCard;
 import domain.cards.Stapel;
+import domain.main.Game;
+import domain.main.PlayOption;
+import domain.main.WholePlay;
 
 /**
  * Ein Spieler spielt das Spiel (game). Er zieht Karten von dem Nachziehstapel und den
@@ -19,11 +19,12 @@ import domain.cards.Stapel;
  * 
  */
 public abstract class AbstractPlayer {
-
   /**
    * Der Name des Spielers
    */
   final private String name;
+
+  private int myIndex;
 
   private Game game;
 
@@ -31,16 +32,26 @@ public abstract class AbstractPlayer {
 
   private LinkedList<AbstractCard> handKarten;
 
-  protected Stapel lastPlay;
+  protected Stapel lastAblage;
 
-  protected Map<Color, Stack<AbstractCard>> enemyEx;
-
-  public AbstractPlayer(Game game, String name) {
-    this.game = game;
+  public AbstractPlayer(String name) {
     this.name = name;
-    this.lastPlay = null;
+    this.lastAblage = null;
     initExpeditionen();
     initHandKarten();
+  }
+
+  public void setGame(Game g) {
+    this.game = g;
+  }
+
+  public AbstractPlayer(AbstractPlayer copy) {
+    this.name = copy.name;
+    this.myIndex = copy.myIndex;
+    this.lastAblage = copy.lastAblage;
+    this.initExpeditionen();
+    this.initHandKarten();
+    this.copyFields(copy);
   }
 
 
@@ -55,12 +66,10 @@ public abstract class AbstractPlayer {
 
 
   /**
-   * Initialisierung der Handkarten: Der Spieler zieht acht Karten von dem Nachziehstapel.
+   * lediglich erstellen der Liste der Handkarten, kein Ziehen von Karten.
    */
   private void initHandKarten() {
     this.handKarten = new LinkedList<AbstractCard>();
-
-
   }
 
 
@@ -69,30 +78,26 @@ public abstract class AbstractPlayer {
    * 
    * @return die Playoption, die der Spieler spielet.
    */
-  public abstract PlayOption play();
+  public abstract PlayOption choosePlay();
 
   public abstract Stapel chooseStapel();
 
   public abstract boolean isAI();
 
-  public LinkedList<Stapel> getDrawSet() {
+  public List<Stapel> getDrawSet() {
 
-    LinkedList<Stapel> result = new LinkedList<Stapel>();
-
-    for (Color c : Color.orderedColors) {
-      if (this.game.getAblageStapel(c).size() > 0) {
+    List<Stapel> result = new LinkedList<Stapel>();
+    for (Color c : Color.values()) {
+      if (!this.game.getAblageStapel(c).isEmpty()) {
         result.add(Stapel.toMiddle(c));
       }
-
     }
 
-    if (this.lastPlay != null) {
-      result.remove(this.lastPlay);
+    if (this.lastAblage != null) {
+      result.remove(this.lastAblage);
     }
-
-
     result.add(Stapel.NACHZIEHSTAPEL);
-    this.lastPlay = null;
+
     return result;
   }
 
@@ -120,9 +125,9 @@ public abstract class AbstractPlayer {
    * 
    * @return
    */
-  public LinkedList<PlayOption> getPlaySet() {
+  public List<PlayOption> getPlaySet() {
 
-    LinkedList<PlayOption> result = new LinkedList<PlayOption>();
+    List<PlayOption> result = new LinkedList<PlayOption>();
 
     this.getHandKarten().stream().forEach(card -> {
 
@@ -141,32 +146,11 @@ public abstract class AbstractPlayer {
          * Andernfalls, muss die Karte eine Wettcard sein oder man muss eine größere Nummer haben
          */
       } else {
-        if (card.isNumber()) {
-          NumberCard currentCard = (NumberCard) card;
-          AbstractCard peek = this.getExpeditionen().get(card.getColor()).peek();
-          /*
-           * Falls beide eine Nummer sind, muss man eine größere Zahl haben
-           */
-          if (peek.isNumber()) {
-            NumberCard num = (NumberCard) peek;
-            if (num.getValue() < currentCard.getValue()) {
-              result.add(new PlayOption(Stapel.toExpedition(card.getColor()), card));
-            }
-          } else {
-            /*
-             * Auf eine Wettkarte kann man eine Nummerkarte legen
-             */
-            result.add(new PlayOption(Stapel.toExpedition(card.getColor()), card));
-          }
-        } else {
-          /*
-           * Man kann eine Wettkarte nur als erstes oder auf andere Wettkarten legen
-           */
-          if (!this.getExpeditionen().get(card.getColor()).peek().isNumber()) {
-            result.add(new PlayOption(Stapel.toExpedition(card.getColor()), card));
-          }
 
+        if (card.compareTo(this.expeditionen.get(card.getColor()).peek()) >= 0) {
+          result.add(new PlayOption(Stapel.toExpedition(card.getColor()), card));
         }
+
       }
 
     });
@@ -199,6 +183,8 @@ public abstract class AbstractPlayer {
       Stack<AbstractCard> currentStack = this.expeditionen.get(c);
       if (!currentStack.isEmpty()) {
         res.append(currentStack.peek().toString());
+      } else {
+        res.append("--");
       }
       res.append("\t");
     }
@@ -207,17 +193,107 @@ public abstract class AbstractPlayer {
   }
 
   public void setLastPlay(Stapel abs) {
-    if (abs != null)
-      this.lastPlay = abs;
-  }
-
-  public void setEnemyExpeditions(AbstractPlayer abs) {
-    this.enemyEx = Collections.unmodifiableMap(abs.getExpeditionen());
+    this.lastAblage = abs;
   }
 
   public Map<Color, Stack<AbstractCard>> getEnemyExp() {
-    return this.enemyEx;
+    return this.game.getPlayers().get(myIndex ^ 1).getExpeditionen();
   }
+
+  public Game getGame() {
+    return this.game;
+  }
+
+  public int getRemainingCards() {
+    return this.game.getRemainingCards();
+  }
+
+  public Stapel getLastAblage() {
+    return this.lastAblage;
+  }
+
+  public void copyFields(AbstractPlayer abs) {
+    this.handKarten.addAll(abs.handKarten);
+
+    for (Color c : Color.values()) {
+      expeditionen.get(c).addAll(abs.expeditionen.get(c));
+    }
+  }
+
+
+  public List<PlayOption> getOptimalPlaySet() {
+
+    List<PlayOption> result = new LinkedList<PlayOption>();
+
+    for (Color col : Color.values()) {
+      /*
+       * Falls eine Expedition noch nicht geöffnet/gestartet wurde, kann man dort eine starten
+       */
+
+      if (this.getExpeditionen().get(col).isEmpty()) {
+
+        this.handKarten.stream().filter(pre -> pre.getColor() == col).min((u, v) -> u.compareTo(v))
+            .ifPresent(opt -> result.add(new PlayOption(Stapel.toExpedition(col), opt)));
+
+        /*
+         * Andernfalls, muss die Karte eine Wettcard sein oder man muss eine größere Nummer haben
+         */
+      } else {
+        this.handKarten.stream()
+            .filter(pre -> pre.getColor() == col
+                && pre.compareTo(this.getExpeditionen().get(col).peek()) >= 0)
+            .min((u, v) -> u.compareTo(v))
+            .ifPresent(opt -> result.add(new PlayOption(Stapel.toExpedition(col), opt)));
+      }
+
+    }
+
+
+    this.getHandKarten().stream().forEach(card -> {
+
+      /*
+       * Man kann immer eine Karte in die Mitte legen
+       */
+      result.add(new PlayOption(Stapel.toMiddle(card.getColor()), card));
+
+    });
+
+
+    // System.out.println("Anzahl meiner Karten: " + this.getHandKarten().size());
+    // System.out.println("Anzahl möglicher Plays: " + result.size());
+    return result;
+  }
+
+  /**
+   * gibt eine Liste aller möglichen Plays zurück Ein Play besteht dann aus dem Ablegen und dem
+   * Ziehen
+   * 
+   * @return
+   */
+  public List<WholePlay> getAllActions() {
+
+    // new Stapel[] {Stapel.NACHZIEHSTAPEL}
+    LinkedList<WholePlay> result = new LinkedList<WholePlay>();
+    this.setLastPlay(null);
+    for (PlayOption p : this.getPlaySet()) {
+      for (Stapel s : this.getDrawSet()) {
+        if (p.getStapel() != s) {
+          result.add(new WholePlay(p, s));
+        }
+      }
+    }
+
+    return result;
+  }
+
+  public void setIndex(int i) {
+    this.myIndex = i;
+  }
+
+  public int getIndex() {
+    return this.myIndex;
+  }
+
 
 
 }

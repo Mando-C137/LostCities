@@ -22,6 +22,8 @@ public abstract class AbstractCard implements Comparable<AbstractCard> {
     this.color = color;
   }
 
+  public abstract int getValue();
+
   /**
    * 
    * @return true, falls es sich um eine Nummerkarte handelt
@@ -35,18 +37,6 @@ public abstract class AbstractCard implements Comparable<AbstractCard> {
    */
   public Color getColor() {
     return this.color;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-
-    if (obj == null || this == null) {
-      return false;
-    }
-    if (!obj.getClass().equals(this.getClass())) {
-      return false;
-    }
-    return this.toString().equals(obj.toString());
   }
 
 

@@ -9,7 +9,10 @@ import java.util.Arrays;
  *
  */
 public enum Stapel {
-  NACHZIEHSTAPEL, YELLOWMIDDLE, WHITEMIDDLE, BLUEMIDDLE, GREENMIDDLE, REDMIDDLE, YELLOWEXPEDITION, WHITEEXPEDITION, BLUEEXPEDITION, GREENEXPEDITION, REDEXPEDITION;
+  NACHZIEHSTAPEL(null), YELLOWMIDDLE(Color.YELLOW), WHITEMIDDLE(Color.WHITE), BLUEMIDDLE(
+      Color.BLUE), GREENMIDDLE(Color.GREEN), REDMIDDLE(Color.RED), YELLOWEXPEDITION(
+          Color.YELLOW), WHITEEXPEDITION(Color.WHITE), BLUEEXPEDITION(
+              Color.BLUE), GREENEXPEDITION(Color.GREEN), REDEXPEDITION(Color.RED);
 
   /**
    * Ein Array, das eine feste Ordnung über den Ablagestaepeln festlegt
@@ -22,6 +25,13 @@ public enum Stapel {
    */
   public static final Stapel orderedExpeditions[] =
       {YELLOWEXPEDITION, WHITEEXPEDITION, BLUEEXPEDITION, GREENEXPEDITION, REDEXPEDITION};
+
+  private final Color color;
+
+
+  private Stapel(Color c) {
+    this.color = c;
+  }
 
 
   /**
@@ -43,7 +53,7 @@ public enum Stapel {
       case YELLOW:
         return Stapel.YELLOWMIDDLE;
       default:
-        return null;
+        return Stapel.NACHZIEHSTAPEL;
     }
 
   }
@@ -67,22 +77,15 @@ public enum Stapel {
       case YELLOW:
         return Stapel.YELLOWEXPEDITION;
       default:
+        System.out.println("colorToExpedition default");
         return null;
-
-
 
     }
 
   }
 
   public Color getColor() {
-    if (this.toString().matches(".*MIDDLE")) {
-      return Color.valueOf(this.toString().replace("MIDDLE", ""));
-    } else if (this.toString().matches(".*EXPEDITION")) {
-      return Color.valueOf(this.toString().replace("EXPEDITION", ""));
-    } else {
-      return null;
-    }
+    return this.color;
   }
 
   public boolean isMiddle() {

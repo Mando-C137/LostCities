@@ -39,7 +39,6 @@ public class MyExpeditionenLabels {
 
       CardLabel cl = (CardLabel) arg0.getSource();
       scene.setPlayStapel(Stapel.toExpedition(cl.getCard().getColor()));
-
       scene.executePlay();
 
     }
@@ -179,7 +178,6 @@ public class MyExpeditionenLabels {
 
 
   }
-
 
 
   private void updateStapels() {

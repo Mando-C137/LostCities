@@ -8,11 +8,8 @@ package domain.cards;
  */
 public enum Color {
 
-  YELLOW("YELLOW"), WHITE("WHITE"), BLUE("BLUE"), GREEN("GREEN"), RED("RED");
+  YELLOW, WHITE, BLUE, GREEN, RED;
 
-  Color(String s) {
-
-  }
 
   /**
    * ein Array, das eine feste Ordnung der Colors festlegt : (YELLOW, WHITE, BLUE, GREEN, RED)

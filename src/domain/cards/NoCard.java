@@ -29,8 +29,14 @@ public class NoCard extends AbstractCard {
 
   @Override
   public int compareTo(AbstractCard o) {
-    // TODO Auto-generated method stub
+    // darf nie aufgerufen werden
     return -1;
+  }
+
+  @Override
+  public int getValue() {
+    // TODO Auto-generated method stub
+    return 0;
   }
 
 }

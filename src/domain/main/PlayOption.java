@@ -1,4 +1,4 @@
-package domain.players;
+package domain.main;
 
 import domain.cards.AbstractCard;
 import domain.cards.Stapel;
@@ -31,13 +31,35 @@ public class PlayOption {
   }
 
 
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    PlayOption other = (PlayOption) obj;
+    if (abstractCard == null) {
+      if (other.abstractCard != null)
+        return false;
+    } else if (!abstractCard.equals(other.abstractCard))
+      return false;
+    if (stapel != other.stapel)
+      return false;
+    return true;
+  }
+
+
+
   @Override
   public String toString() {
     return "Play: " + this.abstractCard + " auf " + this.stapel;
   }
 
   /**
-   * Getter
+   * Getter für den Stapel, auf den abgelegt wurde.
    * 
    * @return
    */
@@ -46,7 +68,7 @@ public class PlayOption {
   }
 
   /**
-   * Getter
+   * Getter für die Karte, die abgelegt wurde
    * 
    * @return
    */

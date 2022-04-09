@@ -2,10 +2,10 @@ package userinterface;
 
 import java.util.HashMap;
 import java.util.List;
-import domain.Game;
 import domain.cards.Color;
 import domain.cards.NoCard;
 import domain.cards.Stapel;
+import domain.main.Game;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -138,7 +138,7 @@ public class AblageLabels {
           cl.setCursor(Cursor.HAND);
           cl.setOnMouseClicked(playHandler);
           cl.setStyle(cl.getStyle().replace(borderStyle, "") + borderStyle);
-          System.out.println("play contains stapel");
+
         } else {
           cl.setCursor(Cursor.DEFAULT);
           cl.setStyle(cl.getStyle().replace(borderStyle, ""));
