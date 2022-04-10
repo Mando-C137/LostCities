@@ -18,6 +18,7 @@ import domain.cards.NoCard;
 import domain.cards.NumberCard;
 import domain.cards.Stapel;
 import domain.cards.WettCard;
+import domain.cheatmcts.CheatMCTSStrategy;
 import domain.exception.GameException;
 import domain.gitmonte.GitStrategy;
 import domain.ismcts.InformationSetStrategy;
@@ -177,6 +178,45 @@ public class Game {
     return g;
 
   }
+
+  public static Game twoWithoutStrategies() {
+    Game g = new Game();
+
+    g.players = new ArrayList<AiPlayer>();
+    AiPlayer one = new AiPlayer();
+    one.setIndex(0);
+    one.setGame(g);
+
+    g.players.add(one);
+
+    AiPlayer two = new AiPlayer();
+    two.setGame(g);
+    two.setIndex(1);
+
+    g.players.add(two);
+
+
+    g.drawCards();
+    return g;
+  }
+
+  public static Game ISMCTSvsRANDOM() {
+    Game g = twoWithoutStrategies();
+
+    g.getPlayers().get(0).setStrategy(new InformationSetStrategy(g));
+    g.getPlayers().get(1).setStrategy(new RandomStrategy(g.getPlayers().get(1)));
+    return g;
+  }
+
+  public static Game CHEATvsME() {
+    Game g = twoWithoutStrategies();
+
+    g.getPlayers().get(0).setStrategy(new CheatMCTSStrategy(g.getPlayers().get(0)));
+    g.getPlayers().get(1).setStrategy(new HumanStrategy());
+    return g;
+  }
+
+
 
   public static Game MctsVsMe() {
     Game g = new Game();
@@ -351,13 +391,13 @@ public class Game {
       // System.out.println("actions");
       // top.getAllActions().forEach(con -> System.out.println(con));
 
-      System.out.println("Es spielt nun" + this.turn);
-      System.out.println((top.getHandKarten()));
+      // System.out.println("Es spielt nun" + this.turn);
+      // System.out.println((top.getHandKarten()));
       PlayOption nextPlay = top.choosePlay();
       this.makePlay(nextPlay, top);
       this.addCardtoPlayer(top.chooseStapel(), top);
-      System.out.println(this);
-      System.out.println("Nachziehstapel" + this.getRemainingCards());
+      // System.out.println(this);
+      System.out.println("Nachziehstapelkartenanzahl : " + this.getRemainingCards());
 
 
     }
@@ -644,7 +684,9 @@ public class Game {
     }
 
     if (!player.getHandKarten().remove(p.getCard())) {
-      System.out.println("huge error");
+      System.out.println(player.getHandKarten());
+      System.out.println(play);
+      throw new GameException.DoNotOwnException(player, p.getCard());
     }
 
 

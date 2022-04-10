@@ -19,6 +19,7 @@ import domain.main.WholePlay;
  * 
  */
 public abstract class AbstractPlayer {
+
   /**
    * Der Name des Spielers
    */
@@ -100,6 +101,7 @@ public abstract class AbstractPlayer {
 
     return result;
   }
+
 
   /**
    * Getter für die expeditionen des Spielers. Sollte eigentlich unmodifiable sein.
@@ -211,6 +213,7 @@ public abstract class AbstractPlayer {
   public Stapel getLastAblage() {
     return this.lastAblage;
   }
+
 
   public void copyFields(AbstractPlayer abs) {
     this.handKarten.addAll(abs.handKarten);
