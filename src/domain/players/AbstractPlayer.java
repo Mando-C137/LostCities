@@ -1,10 +1,12 @@
 package domain.players;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import domain.cards.AbstractCard;
 import domain.cards.Color;
@@ -25,16 +27,37 @@ public abstract class AbstractPlayer {
    */
   final private String name;
 
+  /**
+   * der Index, der angibt an welcher Stelle der Spieler in der Liste der game instanz ist .
+   */
   private int myIndex;
 
+  /**
+   * das Spiel, das der Spieler spielt.
+   */
   private Game game;
 
-  private HashMap<Color, Stack<AbstractCard>> expeditionen;
+  /**
+   * Die Expeditionen des Spielers
+   */
+  private Map<Color, Stack<AbstractCard>> expeditionen;
 
-  private LinkedList<AbstractCard> handKarten;
+  /**
+   * Die Handkarten des Spielers.
+   */
+  private List<AbstractCard> handKarten;
 
+  /**
+   * Letzte Ablage des Spielers, um zu vermeiden dass er auf den selben Stapel zieht, auf den er
+   * abgelegt hat.
+   */
   protected Stapel lastAblage;
 
+  /**
+   * Konstruktor: Setzen des Namen initialisieren der Objekte
+   * 
+   * @param name
+   */
   public AbstractPlayer(String name) {
     this.name = name;
     this.lastAblage = null;
@@ -42,9 +65,6 @@ public abstract class AbstractPlayer {
     initHandKarten();
   }
 
-  public void setGame(Game g) {
-    this.game = g;
-  }
 
   public AbstractPlayer(AbstractPlayer copy) {
     this.name = copy.name;
@@ -88,6 +108,7 @@ public abstract class AbstractPlayer {
   public List<Stapel> getDrawSet() {
 
     List<Stapel> result = new LinkedList<Stapel>();
+    result.add(Stapel.NACHZIEHSTAPEL);
     for (Color c : Color.values()) {
       if (!this.game.getAblageStapel(c).isEmpty()) {
         result.add(Stapel.toMiddle(c));
@@ -97,7 +118,7 @@ public abstract class AbstractPlayer {
     if (this.lastAblage != null) {
       result.remove(this.lastAblage);
     }
-    result.add(Stapel.NACHZIEHSTAPEL);
+
 
     return result;
   }
@@ -108,7 +129,7 @@ public abstract class AbstractPlayer {
    * 
    * @return
    */
-  public HashMap<Color, Stack<AbstractCard>> getExpeditionen() {
+  public Map<Color, Stack<AbstractCard>> getExpeditionen() {
     return this.expeditionen;
   }
 
@@ -206,6 +227,10 @@ public abstract class AbstractPlayer {
     return this.game;
   }
 
+  public void setGame(Game g) {
+    this.game = g;
+  }
+
   public int getRemainingCards() {
     return this.game.getRemainingCards();
   }
@@ -275,6 +300,10 @@ public abstract class AbstractPlayer {
    */
   public List<WholePlay> getAllActions() {
 
+    // if (this.getRemainingCards() >= 20) {
+    // return this.alternativeActionsForExpansion();
+    // }
+
     // new Stapel[] {Stapel.NACHZIEHSTAPEL}
     LinkedList<WholePlay> result = new LinkedList<WholePlay>();
     this.setLastPlay(null);
@@ -295,6 +324,71 @@ public abstract class AbstractPlayer {
 
   public int getIndex() {
     return this.myIndex;
+  }
+
+
+  public List<WholePlay> alternativeActionsForExpansion() {
+
+    List<WholePlay> result = new LinkedList<WholePlay>();
+
+    List<PlayOption> options = new LinkedList<PlayOption>();
+
+    this.expeditionen.forEach((col, ex) -> {
+
+      List<AbstractCard> handOfColor = this.handKarten.stream()
+          .filter(card -> card.getColor() == col).collect(Collectors.toList());
+
+      if (!handOfColor.isEmpty()) {
+
+        if (ex.isEmpty()) {
+          AbstractCard min = handOfColor.stream().min(Comparator.naturalOrder()).get();
+          options.add(new PlayOption(Stapel.toExpedition(min.getColor()), min));
+        } else {
+
+          List<AbstractCard> handsWithBiggerValue = handOfColor.stream()
+              .filter(card -> card.getValue() >= ex.peek().getValue()).collect(Collectors.toList());
+
+          if (!handsWithBiggerValue.isEmpty()) {
+            AbstractCard min = handsWithBiggerValue.stream().min(Comparator.naturalOrder()).get();
+            options.add(new PlayOption(Stapel.toExpedition(min.getColor()), min));
+          }
+
+        }
+
+        if (!this.getEnemyExp().get(col).isEmpty()) {
+
+
+          handOfColor.stream()
+              .filter(card -> card.getValue() >= this.getEnemyExp().get(col).peek().getValue())
+              .forEach(con -> options.add(new PlayOption(Stapel.toMiddle(con.getColor()), con)));
+
+        } else {
+          handOfColor.stream()
+              .forEach(con -> options.add(new PlayOption(Stapel.toMiddle(con.getColor()), con)));
+        }
+
+
+      }
+
+
+
+    });
+
+
+    if (options.isEmpty()) {
+      System.out.println("huge error");
+    }
+    for (PlayOption ablage : options) {
+      for (Stapel stapel : this.getDrawSet()) {
+
+        if (ablage.getStapel() != stapel) {
+          result.add(new WholePlay(ablage, stapel));
+        }
+      }
+    }
+
+
+    return result;
   }
 
 

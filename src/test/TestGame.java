@@ -1,5 +1,6 @@
 package test;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import domain.main.Game;
@@ -10,7 +11,7 @@ class TestGame {
   void test() {
 
 
-    Game g = new Game();
+    Game g = Game.twoRandoms();
     // PlayOption play = g.getPlayers().get(0).play();
     // g.externalPlay(play, g.getPlayers().get(0));
     Game copy = new Game(g);
@@ -30,5 +31,33 @@ class TestGame {
     assertEquals(g.calculateWinnerIndex(0), copy.calculateWinnerIndex(0));
 
   }
+
+
+  @Test
+  void testActions() {
+
+    Game g = Game.twoRandoms();
+
+    System.out.println(g.getPlayers().get(0).getAllActions().size());
+
+    g.getPlayers().get(0).getAllActions().forEach(con -> System.out.println(con));
+
+    assertTrue(g.getPlayers().get(0).getAllActions().size() <= 16);
+
+
+
+  }
+
+  @Test
+  void testasdf() {
+
+
+
+    System.out.println(0 ^ 1);
+
+
+
+  }
+
 
 }

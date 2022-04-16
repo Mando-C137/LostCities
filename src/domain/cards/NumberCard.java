@@ -50,17 +50,19 @@ public class NumberCard extends AbstractCard {
   @Override
   public int compareTo(AbstractCard o) {
 
-    if (!o.isNumber()) {
+    return this.getValue() - o.getValue();
 
-      if (this.val == 2) {
-        return 1;
-      }
-
-      return this.getValue();
-    } else {
-      NumberCard numCard = (NumberCard) o;
-      return this.getValue() - numCard.getValue();
-    }
+    // if (!o.isNumber()) {
+    //
+    // if (this.val == 2) {
+    // return 1;
+    // }
+    //
+    // return this.getValue();
+    // } else {
+    // NumberCard numCard = (NumberCard) o;
+    // return this.getValue() - numCard.getValue();
+    // }
 
 
   }

@@ -13,6 +13,7 @@ public class Main extends Application {
   public void start(Stage arg0) throws Exception {
 
     Game theGame;
+    // theGame = PimcStrategy.PIMCvsHuman();
     theGame = Game.CHEATvsME();
     // (theGame.getPlayers().get(0))
     // .setStrategy(new CheatMctsStrategy(theGame.getPlayers().get(0), 5000));

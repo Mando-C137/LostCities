@@ -9,8 +9,17 @@ import domain.main.Game;
 import domain.main.WholePlay;
 import domain.players.AiPlayer;
 
+/**
+ * Ein Knote für MCTS-Bäume ( nicht IS-MCTS)
+ * 
+ * @author paulh
+ *
+ */
 public class CheatNode {
 
+  /**
+   * Die Aktion, die zu dem Knoten geführt hat
+   */
   private final WholePlay incomingAction;
 
   /**
@@ -18,18 +27,37 @@ public class CheatNode {
    */
   private final int playerIndex;
 
+  /**
+   * Die Kinderknoten dieses Knoten
+   */
   private final List<CheatNode> children;
 
+  /**
+   * Der Elternknoten
+   */
   private final CheatNode parent;
 
+  /**
+   * Der Wert dieses Knoten
+   */
   private double value;
 
+  /**
+   * Die Anzahl an visits des Knoten
+   */
   private int visitcount;
 
+  /**
+   * Konstruktor: Setzen der Aktion, des Spielerindex und Elterknoten
+   * 
+   * @param action die Aktion, die diese Aktion erzeugt hat
+   * @param index der Index des Spielers, der am Zug ist
+   * @param parent der Elterknoten
+   */
   public CheatNode(WholePlay action, int index, CheatNode parent) {
     this.children = new LinkedList<CheatNode>();
     this.parent = parent;
-    this.playerIndex = index ^ 1;
+    this.playerIndex = index;
     this.incomingAction = action;
     this.value = 0;
     this.visitcount = 0;
@@ -67,11 +95,14 @@ public class CheatNode {
       return Integer.MAX_VALUE;
     }
 
-    double value = (rootIndex == playerIndex) ? this.value : this.visitcount - this.value;
+    double value = (rootIndex != playerIndex) ? this.value : this.visitcount - this.value;
 
-    return (double) (value / this.visitcount) + 1 * Math.sqrt(
+    double uct = (double) (value / this.visitcount) + 0.7 * Math.sqrt(
 
         Math.log((double) this.parent.visitcount) / (double) this.visitcount);
+
+
+    return uct;
   }
 
   public List<WholePlay> unexpandendChildren(Game d) {
@@ -112,8 +143,12 @@ public class CheatNode {
     while (current != null) {
       current.visitcount++;
       current.value += simulationResult;
+
       current = current.parent;
+
     }
+
+
 
   }
 
@@ -131,6 +166,26 @@ public class CheatNode {
       System.out.println("VisitCount\t" + con.visitcount);
 
     });
+
+  }
+
+  public List<CheatNode> getChildren() {
+
+    return this.children;
+  }
+
+  public WholePlay getAction() {
+
+    return this.incomingAction;
+  }
+
+  public int getVisits() {
+
+    return this.visitcount;
+  }
+
+  public void addVisits(int visits) {
+    this.visitcount += visits;
 
   }
 

@@ -1,6 +1,8 @@
 package experiments;
 
 import domain.main.Game;
+import domain.players.AiPlayer;
+import domain.strategies.SecondRandomStrategy;
 
 public class Executioner {
 
@@ -25,8 +27,13 @@ public class Executioner {
     ExperimentInfo info = new ExperimentInfo();
 
 
-    for (; System.currentTimeMillis() - info.start <= 1_800_000;) {
-      game = Game.ISMCTSvsRANDOM();
+    for (int i = 0; i < 100_000; i++) {
+      game = Game.twoRandoms();
+
+      for (AiPlayer p : game.getPlayers()) {
+        p.setStrategy(new SecondRandomStrategy(p));
+      }
+
       game.gameFlow();
       int diff = game.calculateDiff(0);
 
@@ -42,10 +49,10 @@ public class Executioner {
       info.numberOfGames++;
 
 
-
     }
 
     info.printInfo();
+    System.out.println(SecondRandomStrategy.count);
 
     System.out.println("IS_MCTSS, iterationen 30_000, simulations-stategie: random");
 

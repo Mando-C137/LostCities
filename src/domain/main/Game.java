@@ -68,7 +68,7 @@ public class Game {
   /**
    * Konstruktor: Initialisierung aller nötigen Objekte, Generieren des Nachziehstapels
    */
-  public Game() {
+  private Game() {
     this.gameEnd = false;
     this.players = new ArrayList<AiPlayer>();
     initStaepel();
@@ -77,82 +77,36 @@ public class Game {
   }
 
   public static Game twoRandoms() {
-    Game g = new Game();
+    Game g = Game.twoWithoutStrategies();
 
-    AiPlayer one = new AiPlayer();
-    one.setIndex(0);
-    one.setGame(g);
-    one.setStrategy(new RandomStrategy(one));
-    g.players.add(one);
+    g.getPlayers().forEach(con -> con.setStrategy(new RandomStrategy(con)));
 
-    AiPlayer two = new AiPlayer();
-    two.setIndex(1);
-    two.setStrategy(new RandomStrategy(two));
-    two.setGame(g);
-    g.players.add(two);
 
-    g.drawCards();
     return g;
   }
 
-  public static Game DifferentMCTS() {
-    Game g = new Game();
-
-    AiPlayer one = new AiPlayer();
-    one.setIndex(0);
-    one.setGame(g);
-    one.setStrategy(new GitStrategy(g));
-    g.players.add(one);
-
-    AiPlayer two = new AiPlayer();
-    two.setGame(g);
-    two.setIndex(1);
-    two.setStrategy(new GitStrategy(g));
-    g.players.add(two);
-
-    g.drawCards();
-    return g;
-  }
 
   public static Game SimpleVsMCTS() {
-    Game g = new Game();
+    Game g = Game.twoWithoutStrategies();
 
-    g.players = new ArrayList<AiPlayer>();
-    AiPlayer one = new AiPlayer();
-    one.setIndex(0);
-    one.setGame(g);
+    AiPlayer one = g.getPlayers().get(0);
     one.setStrategy(new SimpleStrategy(one));
-    g.players.add(one);
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new CheatMCTSStrategy(two));
 
-    AiPlayer two = new AiPlayer();
-    two.setGame(g);
-    two.setIndex(1);
-    two.setStrategy(new GitStrategy(g));
-    g.players.add(two);
 
-    g.drawCards();
     return g;
   }
 
   public static Game SimpleVsMe() {
 
-    Game g = new Game();
+    Game g = Game.twoWithoutStrategies();
 
-    g.players = new ArrayList<AiPlayer>();
-    AiPlayer one = new AiPlayer();
-    one.setIndex(0);
-    one.setGame(g);
+
+    AiPlayer one = g.getPlayers().get(0);
     one.setStrategy(new SimpleStrategy(one));
-    g.players.add(one);
-
-    AiPlayer two = new AiPlayer();
-    two.setGame(g);
-    two.setIndex(1);
+    AiPlayer two = g.getPlayers().get(1);
     two.setStrategy(new HumanStrategy());
-    g.players.add(two);
-
-
-    g.drawCards();
     return g;
 
   }
@@ -160,21 +114,13 @@ public class Game {
   public static Game ISMCTSvsME() {
     Game g = new Game();
 
-    g.players = new ArrayList<AiPlayer>();
-    AiPlayer one = new AiPlayer();
-    one.setIndex(0);
-    one.setGame(g);
+    AiPlayer one = g.getPlayers().get(0);
     one.setStrategy(new InformationSetStrategy(g));
-    g.players.add(one);
 
-    AiPlayer two = new AiPlayer();
-    two.setGame(g);
-    two.setIndex(1);
+
+    AiPlayer two = g.getPlayers().get(1);
     two.setStrategy(new HumanStrategy());
-    g.players.add(two);
 
-
-    g.drawCards();
     return g;
 
   }
@@ -219,21 +165,14 @@ public class Game {
 
 
   public static Game MctsVsMe() {
-    Game g = new Game();
+    Game g = Game.twoWithoutStrategies();
 
-    AiPlayer one = new AiPlayer();
-    one.setIndex(0);
-    one.setGame(g);
+    AiPlayer one = g.getPlayers().get(0);
     one.setStrategy(new GitStrategy(g));
-    g.players.add(one);
 
-    AiPlayer two = new AiPlayer();
-    two.setIndex(1);
-    two.setGame(g);
+    AiPlayer two = g.getPlayers().get(1);
     two.setStrategy(new HumanStrategy());
-    g.players.add(two);
 
-    g.drawCards();
     return g;
   }
 
@@ -397,7 +336,7 @@ public class Game {
       this.makePlay(nextPlay, top);
       this.addCardtoPlayer(top.chooseStapel(), top);
       // System.out.println(this);
-      System.out.println("Nachziehstapelkartenanzahl : " + this.getRemainingCards());
+      // System.out.println("Nachziehstapelkartenanzahl : " + this.getRemainingCards());
 
 
     }
@@ -652,7 +591,7 @@ public class Game {
         if (!c.isNumber()) {
           fact++;
         } else {
-          singleSum += ((NumberCard) c).getValue();
+          singleSum += c.getValue();
         }
       }
 
@@ -741,7 +680,6 @@ public class Game {
     });
 
   }
-
 
 
   public AbstractCard getLastDraw() {

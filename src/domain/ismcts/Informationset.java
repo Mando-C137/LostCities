@@ -11,6 +11,12 @@ import domain.main.Game;
 import domain.main.WholePlay;
 import domain.players.AiPlayer;
 
+/**
+ * Ein Informationset ist ein Knoten für den IS_MCTS-Spielbaum
+ * 
+ * @author paulh
+ *
+ */
 public class Informationset {
 
   /**
@@ -18,16 +24,34 @@ public class Informationset {
    */
   private final int playerIndex;
 
+  /**
+   * Die Kinderknoten
+   */
   private final List<Informationset> children;
 
+  /**
+   * Die Aktion, die zu diesem Knoten geführt hat.
+   */
   private final WholePlay incomingAction;
 
+  /**
+   * Anzahl an visits
+   */
   private int visitcount;
 
+  /**
+   * Anzahl an availabilties für den Knoten
+   */
   private int availabiltycount;
 
+  /**
+   * Wert des Knoten
+   */
   private double value;
 
+  /**
+   * Elterknoten
+   */
   private final Informationset parent;
 
   public Informationset(int responsiblePlayer, WholePlay theAction, Informationset parent) {
@@ -43,9 +67,10 @@ public class Informationset {
 
 
   /**
-   * parameter soll eine determinisierung sein
+   * findet heraus, welche Kinder für die gegebene Determinierung passende plays haben.
    * 
-   * @return
+   * @param g eine Determinisierung des Spiels
+   * @return Die Kinderknoten, die eine passende Aktion für die Determisierung haben.
    */
   public List<Informationset> getCompatibleChildren(Game g) {
     List<WholePlay> ls = g.getPlayers().get(g.getTurn()).getAllActions();
@@ -60,15 +85,12 @@ public class Informationset {
 
 
 
-  /*
-   * the actions from d for which v does not have children in the current tree
-   */
   /**
    * the actions from d for which v does not have children in the current tree. Note that c(v, d)
    * and u(v, d) are defined only for v and d such that d is a determinization of (i.e. a state
    * contained in) the information set to which v correspond
    * 
-   * @return
+   * @return die plays auf das das oben zutrifft
    */
   public List<WholePlay> u_v_d(Game det) {
 
@@ -94,7 +116,12 @@ public class Informationset {
   }
 
   /**
-   * param eine Determinisierung
+   * wählt rekursiv das beste Kind gemäß UCT aus, dabei wird die determisierung immer angepasst an
+   * die Aktionen der Knoten
+   * 
+   * @param d die aktuelle determisierung
+   * @param rootIndex der Index des rootPlayers
+   * @return
    */
   public Informationset selectBestChild(Game d, int rootIndex) {
 
@@ -117,7 +144,12 @@ public class Informationset {
   }
 
 
-
+  /**
+   * UCT-Formel für ein Informationset
+   * 
+   * @param rootIndex
+   * @return
+   */
   private double firstVariation(int rootIndex) {
 
     if (this.visitcount == 0) {
@@ -155,7 +187,11 @@ public class Informationset {
   }
 
 
-
+  /**
+   * Backpropagation-phase: Erhöhen der visits und updaten des values um Simulationsresulat r
+   * 
+   * @param r Simulationsresultat
+   */
   public void backpropagate(double r) {
 
     Informationset current = this;
@@ -171,7 +207,11 @@ public class Informationset {
   }
 
 
-
+  /**
+   * finale Selektion der Aktion: Das Kind mit der höchsten Anzahl an visits.
+   * 
+   * @return
+   */
   public WholePlay finalSelection() {
 
     Optional<Informationset> opt =

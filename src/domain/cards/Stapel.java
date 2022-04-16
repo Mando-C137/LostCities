@@ -20,6 +20,9 @@ public enum Stapel {
   public static final Stapel orderedMiddle[] =
       {YELLOWMIDDLE, WHITEMIDDLE, BLUEMIDDLE, GREENMIDDLE, REDMIDDLE};
 
+  public static final Stapel alleZiehStapel[] =
+      {YELLOWMIDDLE, WHITEMIDDLE, BLUEMIDDLE, GREENMIDDLE, REDMIDDLE, NACHZIEHSTAPEL};
+
   /**
    * Ein Array,das eine feste Ordnung über den Expeditionen festlegt.
    */

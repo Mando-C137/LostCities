@@ -3,6 +3,7 @@ package userinterface;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import domain.cards.AbstractCard;
@@ -16,15 +17,15 @@ import javafx.scene.input.MouseEvent;
 
 public class MyExpeditionenLabels {
 
-  private HashMap<Color, Stack<AbstractCard>> gameEx;
+  private Map<Color, Stack<AbstractCard>> gameEx;
 
-  private HashMap<Color, Stack<CardLabel>> uiEx;
+  private Map<Color, Stack<CardLabel>> uiEx;
 
   private AbstractPlayer abs;
 
   private GameScene scene;
 
-  private LinkedList<CardLabel> hand;
+  private List<CardLabel> hand;
 
   protected int MYHEIGHT = 265;
 

@@ -3,6 +3,12 @@ package domain.strategies;
 import domain.cards.Stapel;
 import domain.main.PlayOption;
 
+/**
+ * Strategie eines Menschen , gibt nur ungültige Daten zurück
+ * 
+ * @author paulh
+ *
+ */
 public class HumanStrategy implements PlayStrategy {
 
   @Override

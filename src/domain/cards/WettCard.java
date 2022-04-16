@@ -26,14 +26,8 @@ public class WettCard extends AbstractCard {
   @Override
   public int compareTo(AbstractCard o) {
 
-    if (!o.isNumber()) {
-      return 0;
-    } else if (o.isNumber()) {
-      NumberCard num = (NumberCard) o;
-      return -num.getValue();
-    }
+    return this.getValue() - o.getValue();
 
-    return 0;
   }
 
   @Override

@@ -42,10 +42,20 @@ public class AiPlayer extends AbstractPlayer {
     return true;
   }
 
+  /**
+   * Setter für die Strategie
+   * 
+   * @param newStrat
+   */
   public void setStrategy(PlayStrategy newStrat) {
     this.strategy = newStrat;
   }
 
+  /**
+   * Getter für die Strategie
+   * 
+   * @return
+   */
   public PlayStrategy getStrategy() {
     return this.strategy;
   }

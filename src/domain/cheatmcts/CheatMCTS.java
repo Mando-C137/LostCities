@@ -1,16 +1,27 @@
 package domain.cheatmcts;
 
 import java.util.List;
-import domain.gitmonte.GitMonte;
 import domain.main.Game;
 import domain.main.WholePlay;
 import domain.players.AiPlayer;
 
+/**
+ * Pures MCTS, dabei wird eine Determinisierung eines Spiels eingegeben und dieses als vollstaendig
+ * beobachtbares Problem gelöst
+ * 
+ * @author paulh
+ *
+ */
 public class CheatMCTS {
 
-
-
-  public static WholePlay cheat_MCTS(Game g, int iterations, int rootIndex) {
+  /**
+   * 
+   * @param g die Game Instanz
+   * @param iterations die Anzahl an iterationen, die MCTS haben soll
+   * @param rootIndex der Index des Spielers, der an der Reihe ist
+   * @return der Wurzelknoten des Spielbaumes
+   */
+  public static CheatNode cheat_MCTS(Game g, final int iterations, final int rootIndex) {
 
     CheatNode root = new CheatNode(null, rootIndex, null);
 
@@ -30,12 +41,10 @@ public class CheatMCTS {
       toSimulate.backpropagate(simulationResult);
 
     }
-
-    WholePlay answer = root.finalSelection();
-
     root.printInfo();
+    return root;
 
-    return answer;
+
 
   }
 
@@ -60,32 +69,32 @@ public class CheatMCTS {
 
     }
 
-    int winner = toSimulate.calculateWinnerIndex(rootIndex);
 
+    double result = toSimulate.calculateWinnerIndex(rootIndex);
 
-    // int diff = toSimulate.calculateDiff(rootIndex);
-    //
-    // if (winner == rootIndex) {
-    // return 1;
-    // } else if (winner == (rootIndex ^ 1)) {
-    // return 0;
-    // } else {
-    // return 0.5;
-    // }
-    //
-    if (winner == playerIndex) {
-      return (playerIndex == rootIndex) ? GitMonte.POINTS_FOR_WIN : GitMonte.POINTS_FOR_LOSS; //
-      // current
-      // player
-      // wins
-    } else if (nextPlayer == winner) {
-      return (nextPlayer == rootIndex) ? GitMonte.POINTS_FOR_WIN : GitMonte.POINTS_FOR_LOSS; //
-      // opponent
-      // // //
-      // wins
+    if (result == rootIndex) {
+      return 1;
+    } else if (result == (rootIndex ^ 1)) {
+      return 0;
     } else {
-      return GitMonte.POINTS_FOR_DRAW; // draw
+      return 0.5;
     }
+
+
+
+    // if (winner == playerIndex) {
+    // return (playerIndex == rootIndex) ? GitMonte.POINTS_FOR_WIN : GitMonte.POINTS_FOR_LOSS; //
+    // // current
+    // // player
+    // // wins
+    // } else if (nextPlayer == winner) {
+    // return (nextPlayer == rootIndex) ? GitMonte.POINTS_FOR_WIN : GitMonte.POINTS_FOR_LOSS; //
+    // // opponent
+    // // // //
+    // // wins
+    // } else {
+    // return GitMonte.POINTS_FOR_DRAW; // draw
+    // }
   }
 
 

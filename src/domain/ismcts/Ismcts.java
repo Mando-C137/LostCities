@@ -7,12 +7,22 @@ import domain.main.Game;
 import domain.main.WholePlay;
 import domain.players.AiPlayer;
 
+/**
+ * Information Set - MCTS
+ * 
+ * @author paulh
+ *
+ */
 public class Ismcts {
 
-  InformationSetStrategy strategy;
 
-
-
+  /**
+   * 
+   * @param realState der aktuelle reale Zustand des Spiels
+   * @param rootIndex
+   * @param iterations
+   * @return
+   */
   public static WholePlay ISMCTS(final Game realState, final int rootIndex, final int iterations) {
 
     Informationset root = new Informationset(rootIndex, null, null);
@@ -52,7 +62,7 @@ public class Ismcts {
    * @param myPlayer
    * @return neue game instanz die geshuffelt ist
    */
-  private static Game determinize(Game game, int myPlayer) {
+  public static Game determinize(Game game, int myPlayer) {
 
     Game result = new Game(game);
 

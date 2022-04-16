@@ -22,6 +22,11 @@ public abstract class AbstractCard implements Comparable<AbstractCard> {
     this.color = color;
   }
 
+  /**
+   * Der Wert des Knoten im Sinne der Punktzahl
+   * 
+   * @return
+   */
   public abstract int getValue();
 
   /**
