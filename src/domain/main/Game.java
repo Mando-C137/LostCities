@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Stack;
@@ -25,7 +26,7 @@ import domain.ismcts.InformationSetStrategy;
 import domain.players.AbstractPlayer;
 import domain.players.AiPlayer;
 import domain.strategies.HumanStrategy;
-import domain.strategies.RandomStrategy;
+import domain.strategies.SecondRandomStrategy;
 import domain.strategies.SimpleStrategy;
 import domain.strategies.SimulationStrategy;
 
@@ -35,6 +36,8 @@ import domain.strategies.SimulationStrategy;
  */
 public class Game {
 
+  private int zuege = 0;
+
   /**
    * Der Nachziehstapel
    */
@@ -43,7 +46,7 @@ public class Game {
   /**
    * Eine Map, die jede Farbe einem Stack aus Karten zuordnet.
    */
-  private HashMap<Color, Stack<AbstractCard>> ablageStaepels;
+  private Map<Color, Stack<AbstractCard>> ablageStaepels;
 
   /**
    * Die 2 Spieler, die das Spiel spielen.
@@ -60,9 +63,6 @@ public class Game {
    */
   private int turn;
 
-  private PlayOption lastPlay;
-
-  private AbstractCard lastDraw;
 
 
   /**
@@ -79,7 +79,7 @@ public class Game {
   public static Game twoRandoms() {
     Game g = Game.twoWithoutStrategies();
 
-    g.getPlayers().forEach(con -> con.setStrategy(new RandomStrategy(con)));
+    g.getPlayers().forEach(con -> con.setStrategy(new SecondRandomStrategy(con)));
 
 
     return g;
@@ -112,10 +112,10 @@ public class Game {
   }
 
   public static Game ISMCTSvsME() {
-    Game g = new Game();
+    Game g = Game.twoWithoutStrategies();
 
     AiPlayer one = g.getPlayers().get(0);
-    one.setStrategy(new InformationSetStrategy(g));
+    one.setStrategy(new InformationSetStrategy(one));
 
 
     AiPlayer two = g.getPlayers().get(1);
@@ -149,8 +149,8 @@ public class Game {
   public static Game ISMCTSvsRANDOM() {
     Game g = twoWithoutStrategies();
 
-    g.getPlayers().get(0).setStrategy(new InformationSetStrategy(g));
-    g.getPlayers().get(1).setStrategy(new RandomStrategy(g.getPlayers().get(1)));
+    g.getPlayers().get(0).setStrategy(new InformationSetStrategy(g.getPlayers().get(0)));
+    g.getPlayers().get(1).setStrategy(new SecondRandomStrategy(g.getPlayers().get(1)));
     return g;
   }
 
@@ -176,7 +176,11 @@ public class Game {
     return g;
   }
 
-
+  /**
+   * Kopierkonstruktor
+   * 
+   * @param g
+   */
   public Game(Game g) {
     this.gameEnd = g.gameEnd;
     this.turn = g.turn;
@@ -203,7 +207,7 @@ public class Game {
 
   private void drawCards() {
 
-    for (AbstractPlayer player : players) {
+    for (AiPlayer player : players) {
       IntStream.range(0, 8).forEach(num -> this.addCardtoPlayer(Stapel.NACHZIEHSTAPEL, player));
     }
 
@@ -281,7 +285,13 @@ public class Game {
     return Optional.ofNullable(card);
   }
 
-
+  /**
+   * entfernt die oberste Karte von einem Ablagestapel spezifiziert durch den Parameter Exception
+   * falls der Stapel leer ist.
+   * 
+   * @param stapel
+   * @return
+   */
   public Optional<AbstractCard> returnCard(Stapel stapel) {
     AbstractCard returnAnswer = null;
     Color c = stapel.getColor();
@@ -322,19 +332,25 @@ public class Game {
     double time = System.currentTimeMillis();
 
 
-    for (; !this.getGameEnd(); i++) {
+    for (; !this.getGameEnd() && this.zuege < 100; i++) {
 
       // Index wechselt immer : 0 ^ 1 = 1 und 1 ^ 1= 0
 
-      AbstractPlayer top = players.get(turn);
+      AiPlayer top = players.get(turn);
       // System.out.println("actions");
       // top.getAllActions().forEach(con -> System.out.println(con));
 
       // System.out.println("Es spielt nun" + this.turn);
       // System.out.println((top.getHandKarten()));
+      // System.out.println(top.getName());
       PlayOption nextPlay = top.choosePlay();
-      this.makePlay(nextPlay, top);
-      this.addCardtoPlayer(top.chooseStapel(), top);
+      Stapel chooseStapel = top.chooseStapel();
+
+      this.checkedPlay(new WholePlay(nextPlay, chooseStapel), top);
+
+      // System.out.println(top.getHandKarten());
+      // System.out.println(chooseStapel);
+      // System.out.println(nextPlay);
       // System.out.println(this);
       // System.out.println("Nachziehstapelkartenanzahl : " + this.getRemainingCards());
 
@@ -349,7 +365,7 @@ public class Game {
     return this.ablageStaepels.get(c);
   }
 
-  public void externalRound(AbstractPlayer p) {
+  public void externalRound(AiPlayer p) {
     this.makePlay(p.choosePlay(), p);
     this.addCardtoPlayer(p.chooseStapel(), p);
 
@@ -358,13 +374,65 @@ public class Game {
   public void checkedPlay(WholePlay w, AiPlayer p) {
     this.makePlay(w.playOption, p);
     this.addCardtoPlayer(w.s, p);
+    this.zuege++;
   }
+
+  /**
+   * unsicher wird nichts gecheckt ob es ein korrekter Play ist.
+   * 
+   * @param play
+   * @param player
+   */
+  public void unCheckedPlay(WholePlay play, AbstractPlayer player) {
+    PlayOption p = play.getOption();
+
+    // Ablegen
+    if (p.getStapel().isExpedition()) {
+      player.getExpeditionen().get(p.getCard().getColor()).add(p.getCard());
+    } else {
+      this.ablageStaepels.get(p.getCard().getColor()).add(p.getCard());
+    }
+
+    if (!player.getHandKarten().remove(p.getCard())) {
+
+      throw new GameException.DoNotOwnException(player, p.getCard());
+    }
+
+
+    Stapel ziehStapel = play.getStapel();
+    AbstractCard drawedCard = null;
+
+    if (ziehStapel.equals(Stapel.NACHZIEHSTAPEL)) {
+
+      player.getHandKarten().add(this.nachZiehStapel.pop());
+
+      this.gameEnd = this.nachZiehStapel.isEmpty();
+    } else {
+      drawedCard = this.ablageStaepels.get(ziehStapel.getColor()).pop();
+
+      player.getHandKarten().add(drawedCard);
+
+      this.players.get(player.getIndex() ^ 1).addCardToModel(drawedCard);
+
+    }
+
+
+    this.turn = this.turn ^ 1;
+    this.zuege++;
+    player.setLastPlay(null);
+
+    this.players.get(player.getIndex() ^ 1).removeCardFromModel(p.getCard());
+
+
+
+  }
+
 
   public void externalPlay(PlayOption opt, AbstractPlayer abs) {
     this.makePlay(opt, abs);
   }
 
-  public void externalDraw(Stapel s, AbstractPlayer abs) {
+  public void externalDraw(Stapel s, AiPlayer abs) {
     this.addCardtoPlayer(s, abs);
   }
 
@@ -393,10 +461,9 @@ public class Game {
     }
 
 
-
     player.setLastPlay(play.getStapel());
-    this.lastPlay = play;
 
+    this.players.get(player.getIndex() ^ 1).removeCardFromModel(cardToPlay);
     // System.out.println(player.getName() + " | " + play.getCard() + " on " + play.getStapel());
 
   }
@@ -417,7 +484,7 @@ public class Game {
 
   }
 
-  private void addCardtoPlayer(Stapel stapel, AbstractPlayer abstractPlayer) {
+  private void addCardtoPlayer(Stapel stapel, AiPlayer abstractPlayer) {
     // System.out.println(abstractPlayer.getName() + " zieht von Stapel" + stapel);
 
     Optional<AbstractCard> abs;
@@ -425,6 +492,8 @@ public class Game {
 
       if (abstractPlayer.getLastAblage() != null) {
         if (abstractPlayer.getLastAblage().equals(stapel)) {
+          System.out.println(abstractPlayer.getLastAblage());
+          System.out.println(stapel);
           throw new GameException.SameCardException();
         }
       }
@@ -442,10 +511,10 @@ public class Game {
       AbstractCard card = abs.get();
       abstractPlayer.getHandKarten().add(card);
 
-      this.lastDraw = stapel.isMiddle() ? card : null;
-
       // benachrichtige den anderen Spieler von dem Draw
-
+      if (stapel.isMiddle()) {
+        this.players.get(abstractPlayer.getIndex() ^ 1).addCardToModel(card);
+      }
 
     } else {
       throw new GameException("karte konnte nicht hinzugefuegt werden");
@@ -606,56 +675,12 @@ public class Game {
     return wholeSum;
   }
 
-  /**
-   * unsicher wird nichts gecheckt ob es ein korrekter Play ist.
-   * 
-   * @param play
-   * @param player
-   */
-  public void unCheckedPlay(WholePlay play, AbstractPlayer player) {
-    PlayOption p = play.getOption();
-
-    // Ablegen
-    if (p.getStapel().isExpedition()) {
-      player.getExpeditionen().get(p.getCard().getColor()).add(p.getCard());
-    } else {
-      this.ablageStaepels.get(p.getCard().getColor()).add(p.getCard());
-    }
-
-    if (!player.getHandKarten().remove(p.getCard())) {
-      System.out.println(player.getHandKarten());
-      System.out.println(play);
-      throw new GameException.DoNotOwnException(player, p.getCard());
-    }
-
-
-    Stapel ziehStapel = play.getStapel();
-    AbstractCard drawedCard = null;
-
-    if (ziehStapel.equals(Stapel.NACHZIEHSTAPEL)) {
-
-      player.getHandKarten().add(this.nachZiehStapel.pop());
-
-      this.gameEnd = this.nachZiehStapel.isEmpty();
-    } else {
-      drawedCard = this.ablageStaepels.get(ziehStapel.getColor()).pop();
-
-      player.getHandKarten().add(drawedCard);
-
-    }
-
-    this.lastPlay = p;
-    this.lastDraw = drawedCard;
-    this.turn = this.turn ^ 1;
-    player.setLastPlay(null);
-
-  }
 
   public void replaceStrategiesWithRandom() {
 
     this.players.forEach(p -> {
 
-      p.setStrategy(new RandomStrategy(p));
+      p.setStrategy(new SecondRandomStrategy(p));
 
     });
 
@@ -682,13 +707,6 @@ public class Game {
   }
 
 
-  public AbstractCard getLastDraw() {
-    return this.lastDraw;
-  }
-
-  public PlayOption getLastPlay() {
-    return this.lastPlay;
-  }
 
   public Stack<AbstractCard> getNachziehstapel() {
 

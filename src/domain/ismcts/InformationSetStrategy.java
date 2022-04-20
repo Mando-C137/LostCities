@@ -4,6 +4,7 @@ import domain.cards.Stapel;
 import domain.main.Game;
 import domain.main.PlayOption;
 import domain.main.WholePlay;
+import domain.players.AiPlayer;
 import domain.strategies.PlayStrategy;
 import domain.strategies.StrategyName;
 
@@ -21,31 +22,24 @@ public class InformationSetStrategy implements PlayStrategy {
   /**
    * Das Spiel, das mit der Strategie asoziiert ist.
    */
-  private Game game;
+  private AiPlayer ai;
 
-  /**
-   * Setter für das Spiel
-   * 
-   * @param myGame
-   */
-  public void setGame(Game myGame) {
-    this.game = myGame;
-  }
+
 
   /**
    * Konstruktor, die das Spiel setzt.
    * 
    * @param myGame
    */
-  public InformationSetStrategy(Game myGame) {
-    this.game = myGame;
+  public InformationSetStrategy(AiPlayer ai) {
+    this.ai = ai;
   }
 
   @Override
   public PlayOption choosePlay() {
-    Game copyGame = new Game(game);
-    copyGame.replacePlayersWithSimulateStrategy();
-    selectedPlay = Ismcts.ISMCTS(copyGame, copyGame.getTurn(), 50_000);
+    Game copyGame = new Game(ai.getGame());
+    copyGame.replaceStrategiesWithRandom();
+    selectedPlay = Ismcts.ISMCTS(copyGame, copyGame.getTurn(), 30_000);
     return selectedPlay.getOption();
   }
 

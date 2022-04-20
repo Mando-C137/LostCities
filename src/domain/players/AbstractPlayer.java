@@ -1,16 +1,22 @@
 package domain.players;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import domain.cards.AbstractCard;
 import domain.cards.Color;
+import domain.cards.NumberCard;
 import domain.cards.Stapel;
+import domain.cards.WettCard;
 import domain.main.Game;
 import domain.main.PlayOption;
 import domain.main.WholePlay;
@@ -188,9 +194,7 @@ public abstract class AbstractPlayer {
    * 
    * @return
    */
-  public String getName() {
-    return this.name;
-  }
+  public abstract String getName();
 
   /**
    * String representation der Expeditionen des Spielers. Eine Zeile, in der in festgelegter
@@ -300,12 +304,12 @@ public abstract class AbstractPlayer {
    */
   public List<WholePlay> getAllActions() {
 
-    // if (this.getRemainingCards() >= 20) {
-    // return this.alternativeActionsForExpansion();
-    // }
+    if (this.getRemainingCards() >= 5) {
+      return this.onlyGoodActions();
+    }
 
     // new Stapel[] {Stapel.NACHZIEHSTAPEL}
-    LinkedList<WholePlay> result = new LinkedList<WholePlay>();
+    ArrayList<WholePlay> result = new ArrayList<WholePlay>();
     this.setLastPlay(null);
     for (PlayOption p : this.getPlaySet()) {
       for (Stapel s : this.getDrawSet()) {
@@ -378,9 +382,9 @@ public abstract class AbstractPlayer {
     if (options.isEmpty()) {
       System.out.println("huge error");
     }
-    for (PlayOption ablage : options) {
-      for (Stapel stapel : this.getDrawSet()) {
 
+    for (Stapel stapel : this.getDrawSet()) {
+      for (PlayOption ablage : options) {
         if (ablage.getStapel() != stapel) {
           result.add(new WholePlay(ablage, stapel));
         }
@@ -389,6 +393,120 @@ public abstract class AbstractPlayer {
 
 
     return result;
+  }
+
+
+  private List<WholePlay> onlyGoodActions() {
+
+
+    List<WholePlay> result = new ArrayList<WholePlay>();
+
+    List<PlayOption> ablagen = new ArrayList<PlayOption>();
+
+    /*
+     * gute Mittelzüge
+     */
+    this.handKarten.stream().filter(card -> {
+
+      boolean keep = true;
+
+
+      if (!this.expeditionen.get(card.getColor()).isEmpty()) {
+        if (card.getValue() >= this.expeditionen.get(card.getColor()).peek().getValue()) {
+          keep = false;
+        }
+      } else if (!this.getEnemyExp().get(card.getColor()).isEmpty()) {
+        if (card.getValue() >= this.getEnemyExp().get(card.getColor()).peek().getValue()) {
+          keep = false;
+        }
+      }
+      return keep;
+
+    }).forEach(card -> ablagen.add(new PlayOption(Stapel.toMiddle(card.getColor()), card)));
+
+
+    /*
+     * jeweils nur den besten Expeditionenzug und joker expeditionzug
+     */
+
+    for (Entry<Color, Stack<AbstractCard>> entry : this.expeditionen.entrySet()) {
+      List<AbstractCard> ls;
+      if (entry.getValue().isEmpty()) {
+        if (!(ls = this.handKarten.stream()
+            .filter(card -> card.getColor() == entry.getKey() && card.isNumber())
+            .collect(Collectors.toList())).isEmpty()) {
+          ablagen.add(new PlayOption(Stapel.toExpedition(entry.getKey()), Collections.min(ls)));
+        }
+        if (!(ls = this.handKarten.stream()
+            .filter(card -> card.getColor() == entry.getKey() && !card.isNumber())
+            .collect(Collectors.toList())).isEmpty()) {
+          ablagen.add(new PlayOption(Stapel.toExpedition(entry.getKey()), ls.get(0)));
+        }
+      } else if (!entry.getValue().isEmpty()) {
+        if (!(ls = this.handKarten.stream()
+            .filter(card -> card.getColor() == entry.getKey()
+                && entry.getValue().peek().getValue() <= card.getValue())
+            .collect(Collectors.toList())).isEmpty()) {
+          ablagen.add(new PlayOption(Stapel.toExpedition(entry.getKey()), Collections.min(ls)));
+
+        }
+      }
+    }
+
+
+    /*
+     * rausfinden welche Karten ich von den Stapel ziehen soll
+     */
+    List<Stapel> ziehpossibilites = new ArrayList<Stapel>();
+    ziehpossibilites.add(Stapel.NACHZIEHSTAPEL);
+    for (Color col : Color.values()) {
+      Optional<AbstractCard> opt = this.getGame().peekAblageStapel(col);
+      if (opt.isPresent()) {
+        AbstractCard val = opt.get();
+        if (!this.expeditionen.get(col).isEmpty()) {
+          if (val.getValue() >= this.expeditionen.get(col).peek().getValue()) {
+            ziehpossibilites.add(Stapel.toMiddle(col));
+          }
+        } else if (this.expeditionen.get(col).isEmpty()) {
+          ziehpossibilites.add(Stapel.toMiddle(col));
+        }
+
+      }
+
+    }
+
+    for (Stapel zieh : ziehpossibilites) {
+      for (PlayOption opt : ablagen) {
+        if (zieh != opt.getStapel()) {
+          result.add(new WholePlay(opt, zieh));
+        }
+      }
+    }
+
+    if (result.isEmpty()) {
+
+
+
+      result.add(new WholePlay(
+          new PlayOption(Stapel.toMiddle(handKarten.get(0).getColor()), handKarten.get(0)),
+          Stapel.NACHZIEHSTAPEL));
+      System.out.println("kein zug möglich gewesen");
+    }
+
+
+    return result;
+
+  }
+
+
+  protected void op() {
+    this.handKarten = new ArrayList<AbstractCard>();
+
+    for (int i = 4; i <= 10; i++) {
+      handKarten.add(new NumberCard(Color.RED, i));
+    }
+    handKarten.add(new WettCard(Color.RED));
+
   }
 
 

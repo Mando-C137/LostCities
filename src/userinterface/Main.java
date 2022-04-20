@@ -14,7 +14,11 @@ public class Main extends Application {
 
     Game theGame;
     // theGame = PimcStrategy.PIMCvsHuman();
-    theGame = Game.CHEATvsME();
+    theGame = Game.SimpleVsMe();
+
+    // theGame.getPlayers().get(1).setStrategy(new HumanStrategy());
+
+    // theGame.getPlayers().get(0).OPCARDS();
     // (theGame.getPlayers().get(0))
     // .setStrategy(new CheatMctsStrategy(theGame.getPlayers().get(0), 5000));
 

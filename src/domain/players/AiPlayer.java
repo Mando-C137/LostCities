@@ -1,5 +1,8 @@
 package domain.players;
 
+import java.util.ArrayList;
+import java.util.List;
+import domain.cards.AbstractCard;
 import domain.cards.Stapel;
 import domain.main.PlayOption;
 import domain.strategies.PlayStrategy;
@@ -11,12 +14,17 @@ public class AiPlayer extends AbstractPlayer {
 
   PlayStrategy strategy;
 
+  List<AbstractCard> model;
+
   public AiPlayer() {
     super("AI");
+    this.model = new ArrayList<AbstractCard>();
   }
 
   public AiPlayer(AiPlayer ai) {
     super(ai);
+
+    this.model = new ArrayList<AbstractCard>(ai.model);
 
     if (ai.strategy.getStrategyName() == StrategyName.RANDOM) {
       this.strategy = new RandomStrategy(this);
@@ -58,6 +66,26 @@ public class AiPlayer extends AbstractPlayer {
    */
   public PlayStrategy getStrategy() {
     return this.strategy;
+  }
+
+  public void removeCardFromModel(AbstractCard remove) {
+    this.model.remove(remove);
+  }
+
+  public void addCardToModel(AbstractCard add) {
+    this.model.add(add);
+  }
+
+  public void setModel(List<AbstractCard> list) {
+    this.model = list;
+  }
+
+  public void OPCARDS() {
+    super.op();
+  }
+
+  public String getName() {
+    return this.strategy.getStrategyName().toString();
   }
 
 }

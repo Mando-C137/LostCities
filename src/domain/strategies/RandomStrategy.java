@@ -14,7 +14,6 @@ import domain.players.AiPlayer;
  */
 public class RandomStrategy implements PlayStrategy {
 
-  public static final String name = "Rand";
 
   private AiPlayer player;
 
@@ -35,6 +34,8 @@ public class RandomStrategy implements PlayStrategy {
     // System.out.println("plays.size " + plays.size());
     PlayOption pl = plays.get(new Random().nextInt(plays.size()));
     this.lastPlay = pl.getStapel();
+
+
 
     return pl;
 

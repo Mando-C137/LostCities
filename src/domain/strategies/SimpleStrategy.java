@@ -16,7 +16,7 @@ import domain.players.ai.Evaluator;
 public class SimpleStrategy implements PlayStrategy {
 
 
-  public static final String name = "Simple";
+  private Stapel notAllowed = null;
 
   public static final int StartPhase = 0;
   public static final int MiddlePhase = 1;
@@ -71,12 +71,28 @@ public class SimpleStrategy implements PlayStrategy {
       this.gamePhase = EndPhase;
     }
 
-    return this.evaluator.choosePlayOption();
+    PlayOption answer = this.evaluator.choosePlayOption();
+
+    // if (answer.getStapel().isMiddle()) {
+    // if (!this.player.getExpeditionen().get(answer.getStapel().getColor()).isEmpty()) {
+    //
+    // if (answer.getCard().getValue() >= this.player.getExpeditionen()
+    // .get((answer.getStapel().getColor())).peek().getValue()) {
+    // System.out.println("hansi");
+    // }
+    //
+    // }
+    // }
+
+    this.notAllowed = answer.getStapel();
+    return answer;
   }
 
   @Override
   public Stapel chooseStapel() {
+
     List<Color> ls = this.iNeedThoseFromAblage();
+    this.notAllowed = null;
     if (!ls.isEmpty()) {
       return Stapel.toMiddle(ls.get((int) (Math.random() * ls.size())));
     }
@@ -88,8 +104,8 @@ public class SimpleStrategy implements PlayStrategy {
   private List<Color> iNeedThoseFromAblage() {
     LinkedList<Color> ls = new LinkedList<Color>();
     for (Color c : Color.values()) {
-      if (this.player.getLastAblage() != null) {
-        if (this.player.getLastAblage().equals(Stapel.toMiddle(c))) {
+      if (this.notAllowed != null) {
+        if (this.notAllowed.equals(Stapel.toMiddle(c))) {
           continue;
         }
       }

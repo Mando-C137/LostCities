@@ -19,6 +19,8 @@ import domain.players.AiPlayer;
  */
 public class Informationset {
 
+  private static double C = 0.7;
+
   /**
    * der spieler der jetzt dran ist.
    */
@@ -53,6 +55,8 @@ public class Informationset {
    * Elterknoten
    */
   private final Informationset parent;
+
+  private List<WholePlay> allowedMoves;
 
   public Informationset(int responsiblePlayer, WholePlay theAction, Informationset parent) {
     this.availabiltycount = 0;
@@ -158,7 +162,7 @@ public class Informationset {
 
     double value = (rootIndex == this.playerIndex) ? this.value : this.visitcount - this.value;
 
-    return (double) (value / this.visitcount) + 0.7 * Math.sqrt(
+    return (double) (value / this.visitcount) + C * Math.sqrt(
 
         Math.log((double) this.availabiltycount) / (double) this.visitcount);
 

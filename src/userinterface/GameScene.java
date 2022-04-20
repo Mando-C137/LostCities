@@ -9,6 +9,7 @@ import domain.cards.Stapel;
 import domain.main.Game;
 import domain.main.PlayOption;
 import domain.players.AbstractPlayer;
+import domain.players.AiPlayer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -30,9 +31,9 @@ public class GameScene extends AnchorPane {
 
   private Game game;
 
-  private AbstractPlayer myPlayer;
+  private AiPlayer myPlayer;
 
-  private AbstractPlayer opp;
+  private AiPlayer opp;
 
   private OppExpeditionenLabels oppEx;
 

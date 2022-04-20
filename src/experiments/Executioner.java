@@ -1,7 +1,7 @@
 package experiments;
 
+import java.time.LocalTime;
 import domain.main.Game;
-import domain.players.AiPlayer;
 import domain.strategies.SecondRandomStrategy;
 
 public class Executioner {
@@ -27,12 +27,17 @@ public class Executioner {
     ExperimentInfo info = new ExperimentInfo();
 
 
-    for (int i = 0; i < 100_000; i++) {
-      game = Game.twoRandoms();
 
-      for (AiPlayer p : game.getPlayers()) {
-        p.setStrategy(new SecondRandomStrategy(p));
-      }
+    LocalTime in_six_hours = LocalTime.now().plusHours(6);
+
+    int i = 0;
+    for (; !LocalTime.now().isAfter(in_six_hours); i++) {
+      game = Game.ISMCTSvsME();
+      game.getPlayers().get(1).setStrategy(new SecondRandomStrategy(game.getPlayers().get(1)));
+
+      // for (AiPlayer p : game.getPlayers()) {
+      // p.setStrategy(new SecondRandomStrategy(p));
+      // }
 
       game.gameFlow();
       int diff = game.calculateDiff(0);
@@ -45,19 +50,27 @@ public class Executioner {
       } else {
         info.draws++;
       }
-
       info.numberOfGames++;
+
+
+      if (i % 10 == 0) {
+        info.printInfo();
+      }
+
 
 
     }
 
     info.printInfo();
-    System.out.println(SecondRandomStrategy.count);
 
-    System.out.println("IS_MCTSS, iterationen 30_000, simulations-stategie: random");
+
+    System.out.println("IS_MCTS, iterationen 30_000, simulations-stategie: random, C=0.7");
 
 
   }
+
+
+
 }
 
 

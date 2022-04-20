@@ -49,7 +49,7 @@ public class Ismcts {
     }
 
     WholePlay finalSelection = root.finalSelection();
-    root.printInfo();
+    // root.printInfo();
     return finalSelection;
 
   }

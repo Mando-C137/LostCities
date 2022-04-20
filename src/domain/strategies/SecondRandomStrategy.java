@@ -11,7 +11,6 @@ public class SecondRandomStrategy implements PlayStrategy {
 
   private Stapel lastPlay;
 
-  public static int count = 0;
 
   public SecondRandomStrategy(AiPlayer ai) {
     this.ai = ai;
@@ -29,9 +28,9 @@ public class SecondRandomStrategy implements PlayStrategy {
     if (this.ai.getExpeditionen().get(card.getColor()).isEmpty()) {
 
       result = new PlayOption(Stapel.toExpedition(card.getColor()), card);
-      count++;
+
     } else if (card.compareTo(this.ai.getExpeditionen().get(card.getColor()).peek()) >= 0) {
-      count++;
+
       result = new PlayOption(Stapel.toExpedition(card.getColor()), card);
     } else {
       result = new PlayOption(Stapel.toMiddle(card.getColor()), card);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class Evaluator {
   public PlayOption choosePlayOption() {
 
     // System.out.println(this.ai.getPlayer().getHandKarten().toString());
+
 
     if (this.ai.getPlayer().getRemainingCards() == 1) {
       Optional<PlayOption> opt = this.optionalHighestCardForExpedition();
@@ -115,22 +117,55 @@ public class Evaluator {
     }
 
     // Sortiere mögliche ExpeditionPlaysNachValue
-    List<PlayOption> pl = this.ai.getPlayer().getPlaySet().stream()
-        .filter(pre -> pre.getStapel().isExpedition())
-        .filter(
-            vet -> !this.ai.getPlayer().getExpeditionen().get(vet.getCard().getColor()).isEmpty())
-        .sorted((u, v) -> u.getCard().compareTo(v.getCard())).collect(Collectors.toList());
+    // List<PlayOption> pl = this.ai.getPlayer().getPlaySet().stream()
+    // .filter(pre -> pre.getStapel().isExpedition())
+    // .filter(
+    // vet -> !this.ai.getPlayer().getExpeditionen().get(vet.getCard().getColor()).isEmpty())
+    // .sorted((u, v) -> u.getCard().compareTo(v.getCard())).collect(Collectors.toList());
+    //
+    // if (!pl.isEmpty()) {
+    //
+    // int index = pl.size() - this.ai.getPlayer().getRemainingCards();
+    //
+    // while (index < 0) {
+    // index++;
+    // }
+    // return pl.get(index);
+    //
+    // }
 
-    if (!pl.isEmpty()) {
 
-      int index = pl.size() - this.ai.getPlayer().getRemainingCards();
+    List<AbstractCard> goodAnswers = new ArrayList<AbstractCard>();
 
-      while (index < 0) {
-        index++;
+    for (Entry<Color, Stack<AbstractCard>> entry : this.ai.getPlayer().getExpeditionen()
+        .entrySet()) {
+
+      if (entry.getValue().isEmpty()) {
+        continue;
       }
-      return pl.get(index);
+
+      List<AbstractCard> cardsToPlay =
+          this.ai.getPlayer().getHandKarten().stream()
+              .filter(card -> card.getColor() == entry.getKey()
+                  && card.getValue() > entry.getValue().peek().getValue())
+              .collect(Collectors.toList());
+
+      if (cardsToPlay.isEmpty()) {
+        continue;
+      }
+
+      AbstractCard potential = Collections.min(cardsToPlay);
+      goodAnswers.add(potential);
 
     }
+
+
+    if (!goodAnswers.isEmpty()) {
+      AbstractCard finalanswer = Collections.max(goodAnswers);
+
+      return new PlayOption(Stapel.toExpedition(finalanswer.getColor()), finalanswer);
+    }
+
 
     return this.ChooseBestAblageStapel();
 
@@ -369,7 +404,15 @@ public class Evaluator {
     if (!ls.isEmpty()) {
       res = ls.get(0);
     } else {
-      res = Collections.min(this.ai.getPlayer().getHandKarten());
+      ls = new LinkedList<AbstractCard>(this.ai.getPlayer().getHandKarten());
+      ls.removeAll(this.iNeedThoseCardsFromMe());
+      if (!ls.isEmpty()) {
+        res = ls.get(0);
+      } else {
+
+        res = Collections.min(this.ai.getPlayer().getHandKarten());
+      }
+
     }
 
     return new PlayOption(Stapel.toMiddle(res.getColor()), res);
@@ -383,12 +426,13 @@ public class Evaluator {
       if (!this.ai.getPlayer().getExpeditionen().get(c).isEmpty()) {
         AbstractCard top = this.ai.getPlayer().getExpeditionen().get(c).peek();
         this.ai.getPlayer().getHandKarten().stream()
-            .filter(h -> h.getColor() == c && h.compareTo(top) >= 0).forEach(card -> res.add(card));
+            .filter(h -> h.getColor() == c && h.compareTo(top) > 0).forEach(card -> res.add(card));
 
 
       }
 
     }
+
     return res;
   }
 
@@ -402,7 +446,7 @@ public class Evaluator {
       if (!this.ai.getPlayer().getEnemyExp().get(c).isEmpty()) {
         AbstractCard top = this.ai.getPlayer().getEnemyExp().get(c).peek();
         this.ai.getPlayer().getHandKarten().stream()
-            .filter(h -> h.getColor() == c && h.compareTo(top) >= 0).forEach(card -> res.add(card));
+            .filter(h -> h.getColor() == c && h.compareTo(top) > 0).forEach(card -> res.add(card));
       }
     }
     return res;
