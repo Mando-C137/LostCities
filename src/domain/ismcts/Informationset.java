@@ -19,6 +19,11 @@ import domain.players.AiPlayer;
  */
 public class Informationset {
 
+
+  private long signed_diff;
+
+  private long abs_diff;
+
   private static double C = 0.7;
 
   /**
@@ -127,7 +132,7 @@ public class Informationset {
    * @param rootIndex der Index des rootPlayers
    * @return
    */
-  public Informationset selectBestChild(Game d, int rootIndex) {
+  public Informationset selectBestChild(Game d, final int rootIndex) {
 
     Informationset selectedChild = this;
 
@@ -269,7 +274,6 @@ public class Informationset {
   }
 
 
-
   public WholePlay firstWithNachziehstapel() {
 
     return this.children.stream()
@@ -278,6 +282,17 @@ public class Informationset {
 
   }
 
+  public void backPropagateWithVal(int diff) {
+    Informationset current = this;
+
+    while (current != null) {
+
+      current.visitcount++;
+      current.abs_diff += Math.abs(diff);
+      current.signed_diff += (diff);
+      current = current.parent;
+    }
+  }
 
 
 }

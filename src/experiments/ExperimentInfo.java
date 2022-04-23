@@ -3,12 +3,12 @@ package experiments;
 public class ExperimentInfo {
 
 
-  int diff;
-  int wins;
-  int losses;
-  int draws;
-  double start;
-  int numberOfGames;
+  public int diff;
+  public int wins;
+  public int losses;
+  public int draws;
+  public double start;
+  public int numberOfGames;
 
   public ExperimentInfo() {
     this.start = System.currentTimeMillis();
@@ -28,6 +28,18 @@ public class ExperimentInfo {
     System.out
         .println("Overalltime " + (double) (System.currentTimeMillis() - this.start) / 1000 + "s");
 
+  }
+
+  public void applyGame(int diff2) {
+    this.numberOfGames++;
+    this.diff += diff2;
+    if (diff2 > 0) {
+      this.wins++;
+    } else if (diff2 == 0) {
+      this.losses++;
+    } else {
+      this.draws++;
+    }
   }
 
 

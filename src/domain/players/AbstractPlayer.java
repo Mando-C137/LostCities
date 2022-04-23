@@ -433,7 +433,8 @@ public abstract class AbstractPlayer {
       List<AbstractCard> ls;
       if (entry.getValue().isEmpty()) {
         if (!(ls = this.handKarten.stream()
-            .filter(card -> card.getColor() == entry.getKey() && card.isNumber())
+            .filter(
+                card -> card.getColor() == entry.getKey() && card.isNumber() && card.getValue() < 9)
             .collect(Collectors.toList())).isEmpty()) {
           ablagen.add(new PlayOption(Stapel.toExpedition(entry.getKey()), Collections.min(ls)));
         }
@@ -484,8 +485,6 @@ public abstract class AbstractPlayer {
     }
 
     if (result.isEmpty()) {
-
-
 
       result.add(new WholePlay(
           new PlayOption(Stapel.toMiddle(handKarten.get(0).getColor()), handKarten.get(0)),

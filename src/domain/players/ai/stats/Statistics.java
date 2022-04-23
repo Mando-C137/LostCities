@@ -54,7 +54,7 @@ public class Statistics {
    * 
    * @param a
    */
-  public void onMyHand(AbstractCard a) {
+  private void onMyHand(AbstractCard a) {
     StatisticalCard s = probCards.get(a);
     s.probToGet = 1;
     s.status = Status.MyHand;

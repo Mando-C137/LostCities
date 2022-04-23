@@ -14,7 +14,7 @@ public class Main extends Application {
 
     Game theGame;
     // theGame = PimcStrategy.PIMCvsHuman();
-    theGame = Game.SimpleVsMe();
+    theGame = Game.ISMCTSvsME();
 
     // theGame.getPlayers().get(1).setStrategy(new HumanStrategy());
 

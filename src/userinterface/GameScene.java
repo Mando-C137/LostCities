@@ -10,6 +10,7 @@ import domain.main.Game;
 import domain.main.PlayOption;
 import domain.players.AbstractPlayer;
 import domain.players.AiPlayer;
+import experiments.ExperimentInfo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -48,6 +49,8 @@ public class GameScene extends AnchorPane {
   private Label scoreBoard;
 
   private static final int height = 110;
+
+  ExperimentInfo info = new ExperimentInfo();
 
   public GameScene(Game theGame) {
 
@@ -218,9 +221,14 @@ public class GameScene extends AnchorPane {
     }
 
     if (game.getGameEnd()) {
+
+      int diff = game.calculateDiff(0);
+      info.applyGame(diff);
       this.playMode = false;
       this.drawMode = false;
       this.addNewGameButton();
+
+      info.printInfo();
     }
     update();
   }

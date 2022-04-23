@@ -7,7 +7,7 @@ import domain.main.Game;
 import domain.main.PlayOption;
 import domain.main.WholePlay;
 import domain.players.AiPlayer;
-import domain.players.ai.Model;
+
 
 public class Node {
 
@@ -29,8 +29,7 @@ public class Node {
 
     AiPlayer notMe = this.getGame().getPlayers().get(turn ^ 1);
 
-    return new Model(me).calculateScore() - new Model(notMe).calculateScore();
-
+    return 0;
 
   }
 

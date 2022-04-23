@@ -16,6 +16,8 @@ import domain.players.AiPlayer;
 public class Ismcts {
 
 
+  private static boolean val = true;
+
   /**
    * 
    * @param realState der aktuelle reale Zustand des Spiels
@@ -38,7 +40,11 @@ public class Ismcts {
         toSimulate = selectedSet.expand(determinizedState);
       }
 
+
+
       double simulationResult = Ismcts.simulateBinary(determinizedState, rootIndex);
+
+
       toSimulate.backpropagate(simulationResult);
 
     }
@@ -49,7 +55,7 @@ public class Ismcts {
     }
 
     WholePlay finalSelection = root.finalSelection();
-    // root.printInfo();
+    root.printInfo();
     return finalSelection;
 
   }
@@ -115,20 +121,7 @@ public class Ismcts {
     } else {
       return 0.5;
     }
-    //
-    // if (winner == playerIndex) {
-    // return (playerIndex == rootIndex) ? GitMonte.POINTS_FOR_WIN : GitMonte.POINTS_FOR_LOSS; //
-    // // current
-    // // player
-    // // wins
-    // } else if (nextPlayer == winner) {
-    // return (nextPlayer == rootIndex) ? GitMonte.POINTS_FOR_WIN : GitMonte.POINTS_FOR_LOSS; //
-    // // opponent
-    // // // //
-    // // wins
-    // } else {
-    // return GitMonte.POINTS_FOR_DRAW; // draw
-    // }
+
   }
 
   /**
@@ -140,7 +133,7 @@ public class Ismcts {
    */
   private static double simulateDiff(Game g, int myPlayer) {
 
-    Game toSimulate = new Game(g);
+    Game toSimulate = g;
     int playerIndex = g.getTurn() ^ 1;
     int nextPlayer = playerIndex ^ 1;
 
@@ -155,16 +148,9 @@ public class Ismcts {
     int diff = toSimulate.calculateDiff(myPlayer);
     // int winner = toSimulate.calculateWinnerIndex(myPlayer);
 
-    if (diff > 0) {
-      return (playerIndex == myPlayer) ? diff : -diff; // current
-                                                       // player
-                                                       // wins
-    } else if (diff < 0) {
-      return (nextPlayer == myPlayer) ? diff : -diff; // opponent
-                                                      // wins
-    } else {
-      return 0; // draw
-    }
+
+
+    return diff;
   }
 
 

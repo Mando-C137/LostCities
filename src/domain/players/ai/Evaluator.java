@@ -36,11 +36,9 @@ public class Evaluator {
     }
 
 
-    if (this.ai.getPlayer().getRemainingCards() <= 9) {
+    if (this.ai.getPlayer().getRemainingCards() <= 11) {
       return this.endGameDecision();
     }
-
-
 
     // direkte Nachfolger werden direkt gelegt
     Optional<PlayOption> opt = optionalDirectSuccessor();
