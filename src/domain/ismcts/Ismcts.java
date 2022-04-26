@@ -29,7 +29,7 @@ public class Ismcts {
 
     Informationset root = new Informationset(rootIndex, null, null);
 
-    for (int i = 0; i < iterations; i++) {
+    for (double start = System.currentTimeMillis(); System.currentTimeMillis() - start <= 10_000;) {
 
       Game determinizedState = Ismcts.determinize(realState, rootIndex);
 
@@ -55,7 +55,7 @@ public class Ismcts {
     }
 
     WholePlay finalSelection = root.finalSelection();
-    root.printInfo();
+    // root.printInfo();
     return finalSelection;
 
   }
@@ -101,10 +101,11 @@ public class Ismcts {
   private static double simulateBinary(Game g, int rootIndex) {
 
     Game toSimulate = new Game(g);
+    toSimulate.replacePlayersWithSimpleAi();
     int playerIndex = g.getTurn() ^ 1;
     int nextPlayer = playerIndex ^ 1;
 
-    while (!toSimulate.getGameEnd()) {
+    while (!toSimulate.getGameEnd() && toSimulate.getZuege() < 100) {
 
       AiPlayer abs = toSimulate.getPlayers().get(toSimulate.getTurn());
       WholePlay nextPlay = new WholePlay(abs.choosePlay(), abs.chooseStapel());

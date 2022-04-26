@@ -19,6 +19,8 @@ public class SecondRandomStrategy implements PlayStrategy {
   @Override
   public PlayOption choosePlay() {
 
+
+
     PlayOption result = null;
 
     int randomIndex = (int) (Math.random() * this.ai.getHandKarten().size());
@@ -37,12 +39,15 @@ public class SecondRandomStrategy implements PlayStrategy {
     }
 
     lastPlay = result.getStapel();
+
+
     return result;
   }
 
   @Override
   public Stapel chooseStapel() {
     if (Math.random() > 0.5) {
+
       return Stapel.NACHZIEHSTAPEL;
     }
 

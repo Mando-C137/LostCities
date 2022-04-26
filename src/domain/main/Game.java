@@ -69,6 +69,7 @@ public class Game {
    * Konstruktor: Initialisierung aller nötigen Objekte, Generieren des Nachziehstapels
    */
   private Game() {
+    this.zuege = 0;
     this.gameEnd = false;
     this.players = new ArrayList<AiPlayer>();
     initStaepel();
@@ -184,6 +185,7 @@ public class Game {
   public Game(Game g) {
     this.gameEnd = g.gameEnd;
     this.turn = g.turn;
+    this.zuege = g.zuege;
     this.ablageStaepels = new HashMap<Color, Stack<AbstractCard>>();
     for (Color c : Color.values()) {
       this.ablageStaepels.put(c, new Stack<AbstractCard>());
@@ -711,6 +713,11 @@ public class Game {
   public Stack<AbstractCard> getNachziehstapel() {
 
     return this.nachZiehStapel;
+  }
+
+  public int getZuege() {
+
+    return this.zuege;
   }
 
 

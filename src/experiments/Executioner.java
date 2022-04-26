@@ -2,7 +2,7 @@ package experiments;
 
 import java.time.LocalTime;
 import domain.main.Game;
-import domain.strategies.SecondRandomStrategy;
+import domain.strategies.SimpleStrategy;
 
 public class Executioner {
 
@@ -25,21 +25,29 @@ public class Executioner {
 
 
     ExperimentInfo info = new ExperimentInfo();
+    double start = System.currentTimeMillis();
 
-
-
-    LocalTime in_six_hours = LocalTime.now().plusHours(6);
-
+    LocalTime in_six_hours = LocalTime.now().plusHours(4);
+    int counter = 0;
+    System.out.println("start");
     int i = 0;
-    for (; !LocalTime.now().isAfter(in_six_hours); i++) {
-      game = Game.ISMCTSvsME();
-      game.getPlayers().get(1).setStrategy(new SecondRandomStrategy(game.getPlayers().get(1)));
+    double averagePoints = 0;
+    // for (; LocalTime.now().isBefore(in_six_hours); i++) {
+    for (; i < 100_000; i++) {
+      game = Game.twoRandoms();
+      game.getPlayers().get(0).setStrategy(new SimpleStrategy(game.getPlayers().get(0)));
 
       // for (AiPlayer p : game.getPlayers()) {
       // p.setStrategy(new SecondRandomStrategy(p));
       // }
 
       game.gameFlow();
+      int points = game.calculateScore(game.getPlayers().get(0));
+      averagePoints += points;
+      if (points > 0) {
+        counter++;
+      }
+
       int diff = game.calculateDiff(0);
 
       info.diff += diff;
@@ -53,18 +61,22 @@ public class Executioner {
       info.numberOfGames++;
 
 
-      if (i % 10 == 0) {
-        info.printInfo();
-      }
+      // if (i % 10 == 0) {
+      // info.printInfo();
+      // }
 
 
 
     }
 
-    info.printInfo();
+    // info.printInfo();
+    averagePoints /= 100_000;
 
+    System.out.println(averagePoints);
+    System.out.println(counter);
+    System.out.println((System.currentTimeMillis() - start) / 100);
 
-    System.out.println("IS_MCTS, iterationen 30_000, simulations-stategie: random, C=0.7");
+    System.out.println("IS_MCTS vs simple, iterationen10, simulations-stategie: simple, C=0.7");
 
 
   }
