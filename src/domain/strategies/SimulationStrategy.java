@@ -160,8 +160,8 @@ public class SimulationStrategy implements PlayStrategy {
     // }
     //
     // int randomIndex = (int) (Math.random() * result.size());
-    // Stapel s = result.get(randomIndex);
-    // return s;
+    // Stapel toDraw = result.get(randomIndex);
+    // return toDraw;
   }
 
   @Override

@@ -26,7 +26,7 @@ public class ExperimentInfo {
     System.out.println("Draws = " + this.draws);
     System.out.println("OverallGames  " + this.numberOfGames);
     System.out
-        .println("Overalltime " + (double) (System.currentTimeMillis() - this.start) / 1000 + "s");
+        .println("Overalltime " + (double) (System.currentTimeMillis() - this.start) / 1000 + "toDraw");
 
   }
 

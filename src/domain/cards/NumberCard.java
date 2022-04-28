@@ -17,8 +17,8 @@ public class NumberCard extends AbstractCard {
   /**
    * Setzen der Eigenschaften der Karte
    * 
-   * @param c
-   * @param val
+   * @param c Farbe der Expeditionskarte
+   * @param val Wert der Expeditionskarte
    */
   public NumberCard(Color c, int val) {
     super(c);

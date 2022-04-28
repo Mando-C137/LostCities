@@ -1,15 +1,18 @@
 package domain.cards;
 
 /**
- * kann auch noch gelöscht werden
  * 
- * soll als Platzhalter dienen, wenn an bestimmten stacks noch nichts liegt
+ * 
+ * dienst als Platzhalter, erfüllt für die Spiellogik keine Rolle.
  * 
  * @author paulh
  *
  */
 public class NoCard extends AbstractCard {
 
+  /**
+   * Konstruktor zum Setzen der Farbe.
+   */
   public NoCard(Color color) {
     super(color);
 
@@ -35,7 +38,7 @@ public class NoCard extends AbstractCard {
 
   @Override
   public int getValue() {
-    // TODO Auto-generated method stub
+
     return 0;
   }
 

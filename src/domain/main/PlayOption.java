@@ -4,7 +4,7 @@ import domain.cards.AbstractCard;
 import domain.cards.Stapel;
 
 /**
- * Repräsentation eines Spielzuges
+ * Repräsentation eines Spielzuges, der eine Ablage eine Karte darstellt.
  *
  */
 public class PlayOption {

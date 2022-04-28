@@ -34,11 +34,11 @@ public class Pimc {
 
     List<Thread> allRuns = new LinkedList<Thread>();
 
-    // List<DeterminzationRunnable> runnables = new LinkedList<DeterminzationRunnable>();
+    // List<DeterminizationRunnable> runnables = new LinkedList<DeterminizationRunnable>();
 
     for (int i = 0; i < anzahlDeterminiserungen; i++) {
 
-      DeterminzationRunnable runnable = new DeterminzationRunnable(game, firstLevel);
+      DeterminizationRunnable runnable = new DeterminizationRunnable(game, firstLevel);
       Thread thread = new Thread(runnable);
       thread.start();
       allRuns.add(thread);

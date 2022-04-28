@@ -29,16 +29,21 @@ public enum Stapel {
   public static final Stapel orderedExpeditions[] =
       {YELLOWEXPEDITION, WHITEEXPEDITION, BLUEEXPEDITION, GREENEXPEDITION, REDEXPEDITION};
 
+  /**
+   * Farbe des Stapels
+   */
   private final Color color;
 
-
+  /**
+   * Konstruktor zum Setzen der Farbe
+   */
   private Stapel(Color c) {
     this.color = c;
   }
 
 
   /**
-   * Convertiert das Enum Color zu dem Enum Stapel hier: die enum Instanten die auf middle enden
+   * Convertiert das Enum Color zu einem Middle-Stapel
    * 
    * @return
    */
@@ -62,7 +67,7 @@ public enum Stapel {
   }
 
   /**
-   * Convertiert das Enum Color zu dem Enum Stapel hier: die enum Instanzen die auf expedition enden
+   * Convertiert das Enum Color zu dem Enum Stapel ( hier: die enum Instanzen die Expeditionen sind)
    * 
    * @return
    */
@@ -87,15 +92,30 @@ public enum Stapel {
 
   }
 
+  /**
+   * Getter für die Farbe
+   * 
+   * @return die Farbe
+   */
   public Color getColor() {
     return this.color;
   }
 
+  /**
+   * gibt an ob, ein Stapel, in der Mitte ist, also ein Ablagestapel anzeigt.
+   * 
+   * @return
+   */
   public boolean isMiddle() {
 
     return Arrays.asList(orderedMiddle).contains(this);
   }
 
+  /**
+   * gibt an ob, ein Stapel, in der Mitte ist, also eine Expedition anzeigt.
+   * 
+   * @return
+   */
   public boolean isExpedition() {
 
     return Arrays.asList(orderedExpeditions).contains(this);

@@ -2,26 +2,43 @@ package domain.main;
 
 import domain.cards.Stapel;
 
+/**
+ * Ein WholePlay ist ein ganzer Spielzug: Er enthält den AblagePlay, also worauf ein Spieler eine
+ * Karte ablegt und den Stapel von dem gezogen wird.
+ * 
+ * @author paulh
+ *
+ */
 public class WholePlay {
-  PlayOption playOption;
-  Stapel s;
+  final PlayOption playOption;
+  final Stapel toDraw;
 
   public WholePlay(PlayOption p, Stapel drawStapel) {
     this.playOption = p;
-    this.s = drawStapel;
+    this.toDraw = drawStapel;
   }
 
+  /**
+   * Getter für den AblagePlay
+   * 
+   * @return der AblagePlay
+   */
   public PlayOption getOption() {
     return this.playOption;
   }
 
+  /**
+   * Getter für den Stapel, von dem gezogen wird.
+   * 
+   * @return der Stapel, von dem gezogen wird.
+   */
   public Stapel getStapel() {
-    return this.s;
+    return this.toDraw;
   }
 
   @Override
   public String toString() {
-    return playOption.getCard() + "auf" + playOption.getStapel() + " ziehen von " + this.s;
+    return playOption.getCard() + "auf" + playOption.getStapel() + " ziehen von " + this.toDraw;
   }
 
 
@@ -43,7 +60,7 @@ public class WholePlay {
 
     WholePlay cast = (WholePlay) obj;
 
-    return this.playOption.equals(cast.getOption()) && this.s == cast.s;
+    return this.playOption.equals(cast.getOption()) && this.toDraw == cast.toDraw;
   }
 
 

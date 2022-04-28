@@ -9,12 +9,12 @@ package domain.cards;
 public abstract class AbstractCard implements Comparable<AbstractCard> {
 
   /**
-   * Jede Karte hat eine Farbe
+   * Farbe der Karte
    */
   private final Color color;
 
   /**
-   * lediglich setzen der Farbe
+   * Konstruktor, der die Farbe setzt.
    * 
    * @param color
    */
@@ -25,20 +25,21 @@ public abstract class AbstractCard implements Comparable<AbstractCard> {
   /**
    * Der Wert des Knoten im Sinne der Punktzahl
    * 
-   * @return
+   * @return der Wert der Karte
    */
   public abstract int getValue();
 
   /**
+   * gibt, an ob es sich um eine Wettkarte oder Expeditionskarte handelt.
    * 
-   * @return true, falls es sich um eine Nummerkarte handelt
+   * @return true, falls es sich um eine Nummerkarte handelt, ansonsten false
    */
   public abstract boolean isNumber();
 
   /**
    * Getter für die Farbe
    * 
-   * @return
+   * @return die Farbe der Karte.
    */
   public Color getColor() {
     return this.color;

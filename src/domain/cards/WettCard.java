@@ -8,6 +8,11 @@ package domain.cards;
  */
 public class WettCard extends AbstractCard {
 
+  /**
+   * Konstruktor zum Setzen der Farbe
+   * 
+   * @param color
+   */
   public WettCard(Color color) {
     super(color);
   }

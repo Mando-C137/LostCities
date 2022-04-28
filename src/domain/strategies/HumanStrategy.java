@@ -4,7 +4,7 @@ import domain.cards.Stapel;
 import domain.main.PlayOption;
 
 /**
- * Strategie eines Menschen , gibt nur ungültige Daten zurück
+ * Strategie eines Menschen , gibt nur ungültige Daten zurück. wird eigentlich nicht genutzt.
  * 
  * @author paulh
  *

@@ -356,7 +356,6 @@ public class Game {
       // System.out.println(this);
       // System.out.println("Nachziehstapelkartenanzahl : " + this.getRemainingCards());
 
-
     }
 
   }
@@ -375,7 +374,7 @@ public class Game {
 
   public void checkedPlay(WholePlay w, AiPlayer p) {
     this.makePlay(w.playOption, p);
-    this.addCardtoPlayer(w.s, p);
+    this.addCardtoPlayer(w.toDraw, p);
     this.zuege++;
   }
 

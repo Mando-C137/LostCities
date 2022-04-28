@@ -97,7 +97,7 @@ public class CheatNode {
 
     double value = (rootIndex != playerIndex) ? this.value : this.visitcount - this.value;
 
-    double uct = (double) (value / this.visitcount) + 0.7 * Math.sqrt(
+    double uct = (double) (value / this.visitcount) + 1.41 * Math.sqrt(
 
         Math.log((double) this.parent.visitcount) / (double) this.visitcount);
 

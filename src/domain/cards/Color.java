@@ -1,10 +1,9 @@
 package domain.cards;
 
 /**
- * Das Enum color beschreibt die Farben der Karten und Expeditionen sowie die Ablgestaepel
+ * Das Enum color beschreibt die Farben der Karten, Expeditionen und der Abalgestaepel
  * 
- * @author paulh
- *
+ * @author Paul Heisner
  */
 public enum Color {
 

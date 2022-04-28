@@ -6,7 +6,7 @@ import domain.cheatmcts.CheatNode;
 import domain.ismcts.Ismcts;
 import domain.main.Game;
 
-public class DeterminzationRunnable implements Runnable {
+public class DeterminizationRunnable implements Runnable {
 
   private Game game;
 
@@ -18,7 +18,7 @@ public class DeterminzationRunnable implements Runnable {
    * @param g das Spiel, das determisiert wird
    * @param firstLevel
    */
-  public DeterminzationRunnable(Game g, List<CheatNode> firstLevel) {
+  public DeterminizationRunnable(Game g, List<CheatNode> firstLevel) {
     this.firstLevel = firstLevel;
     this.game = Ismcts.determinize(g, g.getTurn());
 

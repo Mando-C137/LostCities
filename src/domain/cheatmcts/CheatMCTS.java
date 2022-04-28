@@ -25,7 +25,7 @@ public class CheatMCTS {
 
     CheatNode root = new CheatNode(null, rootIndex, null);
 
-    for (int i = 0; i < iterations; i++) {
+    for (double start = System.currentTimeMillis(); System.currentTimeMillis() - start <= 8_000;) {
 
       Game currentGame = new Game(g);
       CheatNode selectedChild = root.selectBestChild(currentGame, rootIndex);
@@ -41,7 +41,7 @@ public class CheatMCTS {
       toSimulate.backpropagate(simulationResult);
 
     }
-    root.printInfo();
+    // root.printInfo();
     return root;
 
 
@@ -58,10 +58,10 @@ public class CheatMCTS {
   private static double simulateBinary(Game g, int rootIndex) {
 
     Game toSimulate = new Game(g);
-    int playerIndex = g.getTurn() ^ 1;
-    int nextPlayer = playerIndex ^ 1;
+    toSimulate.replacePlayersWithSimpleAi();
 
-    while (!toSimulate.getGameEnd()) {
+
+    while (!toSimulate.getGameEnd() && toSimulate.getZuege() < 100) {
 
       AiPlayer abs = toSimulate.getPlayers().get(toSimulate.getTurn());
       WholePlay nextPlay = new WholePlay(abs.choosePlay(), abs.chooseStapel());
