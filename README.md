@@ -56,7 +56,7 @@ Analog zu der oben genannten Konfiguration können Sie hier den gegnerischen Age
 
 Anschließend muss nur die main-Methode ausgeführt werden und die GUI startet.
 
-Durch das Klicken auf ''opponent'' spielt der Gegner den ersten Zug. Danach ist der Spielablauf ziemlich selbsterklärend. 
+Durch das Klicken auf ''opponent'' spielt der Gegner den ersten Zug. Danach ist der Spielablauf ziemlich selbsterklärend. Nachdem ein Spiel vollendet ist, kann ein neues Spiel gestartet werden; in diesem ist jedoch immer der Regelbasierte Agent der Gegner.
 
 Wenn gegen einen MCTS-Agenten gespielt wird, dann braucht dieser bis zu zehn Sekunden Zeit, um sich für eine Aktion zu entscheiden. Währenddessen freezet die GUI und ist unresponsive, was aber keine Probleme machen sollte!
 
