@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Stack;
@@ -235,28 +234,6 @@ public class Game {
 
     return g;
   }
-
-
-  public static Game demoGame() {
-    Game g = Game.ISMCTSvsME();
-
-
-    AiPlayer enemy = g.getPlayers().get(0);
-
-    for (Entry<Color, Stack<AbstractCard>> en : enemy.getExpeditionen().entrySet()) {
-      en.getValue().add(new NumberCard(en.getKey(), 3));
-      en.getValue().add(new NumberCard(en.getKey(), 6));
-      en.getValue().add(new NumberCard(en.getKey(), 7));
-      en.getValue().add(new NumberCard(en.getKey(), 8));
-
-    }
-
-
-
-    return g;
-
-  }
-
 
 
   public static Game MctsVsMe() {

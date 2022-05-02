@@ -23,7 +23,7 @@ public class Main extends Application {
     // game = game.RandomvsMe();
 
     // game = PimcStrategy.PIMCvsHuman();
-    game = Game.demoGame();
+
     GameScene scene = new GameScene(game);
 
     stage = arg0;

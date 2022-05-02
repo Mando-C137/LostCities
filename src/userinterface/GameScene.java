@@ -2,7 +2,6 @@ package userinterface;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.Collectors;
 import domain.cards.AbstractCard;
 import domain.cards.Color;
@@ -81,9 +80,17 @@ public class GameScene extends AnchorPane {
   }
 
   private void initLastPlay() {
-    this.lastPlayLabel = new Label("LastPLay");
+
+    System.out.println("sadf");
+
+    if (this.lastPlayLabel == null)
+      this.lastPlayLabel = new Label("LastPLay");
+    else {
+      this.lastPlayLabel.setText("lastPlay");
+    }
     lastPlayLabel.setLayoutX(380);
     lastPlayLabel.setLayoutY(130);
+
     this.getChildren().add(lastPlayLabel);
 
   }
@@ -153,10 +160,10 @@ public class GameScene extends AnchorPane {
 
       this.getChildren().removeAll(this.getChildren());
 
-      this.initLastPlay();
-      this.initLastPlay();
+
+
       this.initStaepels();
-      this.game = Game.ISMCTSvsME();
+      this.game = Game.SimpleVsMe();
       this.drawMode = false;
       this.playMode = false;
       this.myPlayer = game.getPlayers().get(1);
@@ -167,7 +174,7 @@ public class GameScene extends AnchorPane {
 
       update();
       addButton();
-
+      this.initLastPlay();
 
     });
 
@@ -253,23 +260,13 @@ public class GameScene extends AnchorPane {
       this.addNewGameButton();
 
       info.printInfo();
-      this.calcExp();
-      System.err.println("counter = " + counter);
+
+
     }
     update();
   }
 
-  private void calcExp() {
-    for (Stack<AbstractCard> st : this.game.getPlayers().get(0).getExpeditionen().values()) {
 
-      if (!st.isEmpty()) {
-        counter++;
-      }
-
-
-    }
-
-  }
 
   void setSelectedCard(AbstractCard abs) {
     this.selectedCard = abs;

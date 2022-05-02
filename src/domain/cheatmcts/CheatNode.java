@@ -18,6 +18,11 @@ import domain.players.AiPlayer;
 public class CheatNode {
 
   /**
+   * Parameter C für die UCT-Formel
+   */
+  private static double C = 1.0;
+
+  /**
    * Die Aktion, die zu dem Knoten geführt hat
    */
   private final WholePlay incomingAction;
@@ -186,6 +191,16 @@ public class CheatNode {
 
   public void addVisits(int visits) {
     this.visitcount += visits;
+
+  }
+
+  /**
+   * Setter für den Paramter C
+   * 
+   * @param c
+   */
+  public static void setParameter(double c) {
+    C = c;
 
   }
 

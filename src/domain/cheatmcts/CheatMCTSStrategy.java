@@ -46,7 +46,7 @@ public class CheatMCTSStrategy implements PlayStrategy {
 
     // new GitMonte(copyGame.getTurn()).computeMove(copyGame);
 
-    CheatNode root = CheatMCTS.cheat_MCTS(copyGame, 50_000, copyGame.getTurn());
+    CheatNode root = CheatMCTS.cheat_MCTS(copyGame, 10_000, copyGame.getTurn());
 
     nextPlay = root.finalSelection();
 

@@ -21,15 +21,15 @@ public class Ismcts {
   /**
    * 
    * @param realState der aktuelle reale Zustand des Spiels
-   * @param rootIndex
-   * @param iterations
+   * @param rootIndex index des spielers
+   * @param millis anzahl an millisekunden
    * @return
    */
-  public static WholePlay ISMCTS(final Game realState, final int rootIndex, final int iterations) {
+  public static WholePlay ISMCTS(final Game realState, final int rootIndex, final int millis) {
 
     Informationset root = new Informationset(rootIndex, null, null);
 
-    for (double start = System.currentTimeMillis(); System.currentTimeMillis() - start <= 10_000;) {
+    for (double start = System.currentTimeMillis(); System.currentTimeMillis() - start <= millis;) {
 
       Game determinizedState = Ismcts.determinize(realState, rootIndex);
 

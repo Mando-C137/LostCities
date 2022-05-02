@@ -63,6 +63,10 @@ public class Informationset {
 
   private List<WholePlay> allowedMoves;
 
+  public static void setParameter(double c) {
+    C = c;
+  }
+
   public Informationset(int responsiblePlayer, WholePlay theAction, Informationset parent) {
     this.availabiltycount = 0;
     this.children = new ArrayList<Informationset>();

@@ -28,7 +28,7 @@ public class DeterminizationRunnable implements Runnable {
   @Override
   public synchronized void run() {
 
-    CheatNode root = CheatMCTS.cheat_MCTS(game, 5000, game.getTurn());
+    CheatNode root = CheatMCTS.cheat_MCTS(game, 8_000, game.getTurn());
 
     for (CheatNode childOfRun : root.getChildren()) {
 

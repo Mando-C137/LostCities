@@ -21,11 +21,11 @@ public class CheatMCTS {
    * @param rootIndex der Index des Spielers, der an der Reihe ist
    * @return der Wurzelknoten des Spielbaumes
    */
-  public static CheatNode cheat_MCTS(Game g, final int iterations, final int rootIndex) {
+  public static CheatNode cheat_MCTS(Game g, final int millis, final int rootIndex) {
 
     CheatNode root = new CheatNode(null, rootIndex, null);
 
-    for (double start = System.currentTimeMillis(); System.currentTimeMillis() - start <= 8_000;) {
+    for (double start = System.currentTimeMillis(); System.currentTimeMillis() - start <= millis;) {
 
       Game currentGame = new Game(g);
       CheatNode selectedChild = root.selectBestChild(currentGame, rootIndex);
