@@ -50,7 +50,7 @@ public class Ismcts {
     }
 
     if (root.doesNotMatter()) {
-      System.out.println("does not matter");
+      // System.out.println("does not matter");
       return root.firstWithNachziehstapel();
     }
 

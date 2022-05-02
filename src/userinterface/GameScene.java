@@ -2,12 +2,14 @@ package userinterface;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 import domain.cards.AbstractCard;
 import domain.cards.Color;
 import domain.cards.Stapel;
 import domain.main.Game;
 import domain.main.PlayOption;
+import domain.main.WholePlay;
 import domain.players.AbstractPlayer;
 import domain.players.AiPlayer;
 import experiments.ExperimentInfo;
@@ -22,6 +24,8 @@ import javafx.scene.shape.Rectangle;
 
 public class GameScene extends AnchorPane {
 
+  static int counter = 0;
+
   static String borderStyle = "; -fx-stroke: black; -fx-stroke-width: 5;";
 
   private AbstractCard selectedCard = null;
@@ -29,6 +33,8 @@ public class GameScene extends AnchorPane {
   private Stapel playStapel = null;
 
   private Stapel drawStapel = null;
+
+  private Label lastPlayLabel;
 
   private Game game;
 
@@ -70,6 +76,22 @@ public class GameScene extends AnchorPane {
     update();
     addButton();
 
+    this.initLastPlay();
+
+  }
+
+  private void initLastPlay() {
+    this.lastPlayLabel = new Label("LastPLay");
+    lastPlayLabel.setLayoutX(380);
+    lastPlayLabel.setLayoutY(130);
+    this.getChildren().add(lastPlayLabel);
+
+  }
+
+  private void updateLastPlay(WholePlay play) {
+
+    this.lastPlayLabel.setText("EnemyPlay\nlege " + play.getOption().getCard() + " auf "
+        + play.getOption().getStapel() + "\n ziehen von " + play.getStapel());
   }
 
   private void addButton() {
@@ -87,8 +109,8 @@ public class GameScene extends AnchorPane {
         // temp.getChildren().add(progress);
         // progress.setLayoutX(30);
         // progress.setLayoutY(30);
-        game.externalRound(opp);
-
+        WholePlay pl = game.externalRound(opp);
+        temp.updateLastPlay(pl);
         playMode = true;
         drawMode = false;
         update();
@@ -131,10 +153,10 @@ public class GameScene extends AnchorPane {
 
       this.getChildren().removeAll(this.getChildren());
 
-
-
-      initStaepels();
-      this.game = Game.SimpleVsMe();
+      this.initLastPlay();
+      this.initLastPlay();
+      this.initStaepels();
+      this.game = Game.ISMCTSvsME();
       this.drawMode = false;
       this.playMode = false;
       this.myPlayer = game.getPlayers().get(1);
@@ -212,7 +234,8 @@ public class GameScene extends AnchorPane {
     selectedCard = null;
     drawStapel = null;
     if (!game.getGameEnd()) {
-      this.game.externalRound(opp);
+      WholePlay pl = this.game.externalRound(opp);
+      this.updateLastPlay(pl);
       this.playMode = true;
       this.drawMode = false;
     } else {
@@ -224,13 +247,28 @@ public class GameScene extends AnchorPane {
 
       int diff = game.calculateDiff(0);
       info.applyGame(diff);
+      info.addGame(game.calculateScores());
       this.playMode = false;
       this.drawMode = false;
       this.addNewGameButton();
 
       info.printInfo();
+      this.calcExp();
+      System.err.println("counter = " + counter);
     }
     update();
+  }
+
+  private void calcExp() {
+    for (Stack<AbstractCard> st : this.game.getPlayers().get(0).getExpeditionen().values()) {
+
+      if (!st.isEmpty()) {
+        counter++;
+      }
+
+
+    }
+
   }
 
   void setSelectedCard(AbstractCard abs) {

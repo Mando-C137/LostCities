@@ -39,6 +39,14 @@ public class InformationSetStrategy implements PlayStrategy {
   public PlayOption choosePlay() {
     Game copyGame = new Game(ai.getGame());
     copyGame.replaceStrategiesWithRandom();
+
+    // Evaluator eval = new Evaluator(new SimpleStrategy(this.ai));
+    // Optional<PlayOption> pl = null;
+    // if( (pl = eval.optionalDirectSuccessor() ).isPresent() ) {
+    // return pl.get();
+    // }
+    //
+
     selectedPlay = Ismcts.ISMCTS(copyGame, copyGame.getTurn(), 30_000);
     return selectedPlay.getOption();
   }

@@ -12,20 +12,19 @@ public class Main extends Application {
   @Override
   public void start(Stage arg0) throws Exception {
 
-    Game theGame;
-    // theGame = PimcStrategy.PIMCvsHuman();
-    theGame = Game.ISMCTSvsME();
+    Game game;
 
-    // theGame.getPlayers().get(1).setStrategy(new HumanStrategy());
+    game = Game.SimpleVsMe();
 
-    // theGame.getPlayers().get(0).OPCARDS();
-    // (theGame.getPlayers().get(0))
-    // .setStrategy(new CheatMctsStrategy(theGame.getPlayers().get(0), 5000));
+    // game = Game.ISMCTSvsME();
 
+    // game = Game.CHEATvsME();
 
-    // (theGame.getPlayers().get(0)).setStrategy(new GitStrategy(theGame));
+    // game = game.RandomvsMe();
 
-    GameScene scene = new GameScene(theGame);
+    // game = PimcStrategy.PIMCvsHuman();
+    game = Game.demoGame();
+    GameScene scene = new GameScene(game);
 
     stage = arg0;
     stage.setTitle("LOST CITIES");

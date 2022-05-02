@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import domain.cheatmcts.CheatNode;
 import domain.main.Game;
 import domain.main.WholePlay;
@@ -52,12 +51,12 @@ public class Pimc {
     }
 
 
-    for (CheatNode node : firstLevel.stream().sorted(Comparator.comparing(c -> c.getVisits()))
-        .collect(Collectors.toList())) {
-
-      System.out.println(node.getAction() + " : " + node.getVisits());
-      System.out.println("--------");
-    }
+    // for (CheatNode node : firstLevel.stream().sorted(Comparator.comparing(c -> c.getVisits()))
+    // .collect(Collectors.toList())) {
+    //
+    // System.out.println(node.getAction() + " : " + node.getVisits());
+    // System.out.println("--------");
+    // }
 
 
     return Collections.max(firstLevel, Comparator.comparing(c -> c.getVisits())).getAction();

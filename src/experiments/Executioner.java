@@ -1,9 +1,9 @@
 package experiments;
 
 import java.time.LocalTime;
-import domain.cheatmcts.CheatMCTSStrategy;
+import domain.ismcts.InformationSetStrategy;
 import domain.main.Game;
-import domain.strategies.SimpleStrategy;
+import domain.pimc.PimcStrategy;
 
 public class Executioner {
 
@@ -35,9 +35,9 @@ public class Executioner {
       // for (; i < 100_000; i++) {
       game = Game.twoRandoms();
 
-      game.getPlayers().get(0).setStrategy(new CheatMCTSStrategy(game.getPlayers().get(0)));
+      game.getPlayers().get(0).setStrategy(new InformationSetStrategy(game.getPlayers().get(0)));
 
-      game.getPlayers().get(1).setStrategy(new SimpleStrategy(game.getPlayers().get(1)));
+      game.getPlayers().get(1).setStrategy(new PimcStrategy(game.getPlayers().get(1)));
 
       // for (AiPlayer p : game.getPlayers()) {
       // p.setStrategy(new SecondRandomStrategy(p));
@@ -45,11 +45,15 @@ public class Executioner {
 
       game.gameFlow();
 
+      String s = null;
+      System.out.println(s = game.calculateScores());
 
 
       int diff = game.calculateDiff(0);
 
       info.diff += diff;
+      info.results.add(s);
+
       if (diff > 0) {
         info.wins++;
       } else if (diff < 0) {
@@ -71,7 +75,7 @@ public class Executioner {
     info.printInfo();
 
 
-    System.out.println("cheat vs simple, simulations-stategie: simple, C=1.41");
+    System.out.println("is vs pimc, simulations-stategie: simple, C=1.0");
 
 
   }

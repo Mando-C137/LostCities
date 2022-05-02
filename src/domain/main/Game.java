@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Stack;
@@ -21,8 +22,8 @@ import domain.cards.Stapel;
 import domain.cards.WettCard;
 import domain.cheatmcts.CheatMCTSStrategy;
 import domain.exception.GameException;
-import domain.gitmonte.GitStrategy;
 import domain.ismcts.InformationSetStrategy;
+import domain.pimc.PimcStrategy;
 import domain.players.AbstractPlayer;
 import domain.players.AiPlayer;
 import domain.strategies.HumanStrategy;
@@ -163,13 +164,106 @@ public class Game {
     return g;
   }
 
+  public static Game ISMCTSvsSIMPLE() {
+    Game g = Game.twoWithoutStrategies();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new InformationSetStrategy(one));
+
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new SimpleStrategy(two));
+
+    return g;
+  }
+
+  public static Game ISMCTSvsPIMC() {
+    Game g = Game.twoWithoutStrategies();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new InformationSetStrategy(one));
+
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new PimcStrategy(two));
+
+    return g;
+  }
+
+  public static Game PIMCvsRandom() {
+    Game g = Game.twoWithoutStrategies();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new PimcStrategy(one));
+
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new SecondRandomStrategy(two));
+
+    return g;
+  }
+
+  public static Game PIMCvsSIMPLE() {
+    Game g = Game.twoWithoutStrategies();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new PimcStrategy(one));
+
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new SimpleStrategy(two));
+
+    return g;
+  }
+
+  public static Game SIMPLEvsRandom() {
+    Game g = Game.twoRandoms();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new SimpleStrategy(one));
+
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new SecondRandomStrategy(two));
+
+    return g;
+  }
+
+  public static Game RandomvsMe() {
+    Game g = Game.twoRandoms();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new SecondRandomStrategy(one));
+
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new HumanStrategy());
+
+    return g;
+  }
+
+
+  public static Game demoGame() {
+    Game g = Game.ISMCTSvsME();
+
+
+    AiPlayer enemy = g.getPlayers().get(0);
+
+    for (Entry<Color, Stack<AbstractCard>> en : enemy.getExpeditionen().entrySet()) {
+      en.getValue().add(new NumberCard(en.getKey(), 3));
+      en.getValue().add(new NumberCard(en.getKey(), 6));
+      en.getValue().add(new NumberCard(en.getKey(), 7));
+      en.getValue().add(new NumberCard(en.getKey(), 8));
+
+    }
+
+
+
+    return g;
+
+  }
+
 
 
   public static Game MctsVsMe() {
     Game g = Game.twoWithoutStrategies();
 
     AiPlayer one = g.getPlayers().get(0);
-    one.setStrategy(new GitStrategy(g));
+    one.setStrategy(new CheatMCTSStrategy(one));
 
     AiPlayer two = g.getPlayers().get(1);
     two.setStrategy(new HumanStrategy());
@@ -366,10 +460,11 @@ public class Game {
     return this.ablageStaepels.get(c);
   }
 
-  public void externalRound(AiPlayer p) {
-    this.makePlay(p.choosePlay(), p);
-    this.addCardtoPlayer(p.chooseStapel(), p);
-
+  public WholePlay externalRound(AiPlayer p) {
+    WholePlay pl = new WholePlay(p.choosePlay(), p.chooseStapel());
+    this.makePlay(pl.getOption(), p);
+    this.addCardtoPlayer(pl.getStapel(), p);
+    return pl;
   }
 
   public void checkedPlay(WholePlay w, AiPlayer p) {

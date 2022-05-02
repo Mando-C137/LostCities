@@ -24,7 +24,7 @@ public class Informationset {
 
   private long abs_diff;
 
-  private static double C = 0.7;
+  private static double C = 1.0;
 
   /**
    * der spieler der jetzt dran ist.

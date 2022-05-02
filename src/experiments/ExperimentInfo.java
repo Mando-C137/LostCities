@@ -1,5 +1,8 @@
 package experiments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ExperimentInfo {
 
 
@@ -10,6 +13,8 @@ public class ExperimentInfo {
   public double start;
   public int numberOfGames;
 
+  public List<String> results;
+
   public ExperimentInfo() {
     this.start = System.currentTimeMillis();
     this.diff = 0;
@@ -17,17 +22,26 @@ public class ExperimentInfo {
     this.losses = 0;
     this.draws = 0;
     this.numberOfGames = 0;
+    this.results = new ArrayList<String>();
   }
 
   public void printInfo() {
+    System.out.println("------------");
     System.out.println("diff = " + this.diff);
     System.out.println("Wins = " + this.wins);
     System.out.println("losses = " + this.losses);
     System.out.println("Draws = " + this.draws);
     System.out.println("OverallGames  " + this.numberOfGames);
-    System.out
-        .println("Overalltime " + (double) (System.currentTimeMillis() - this.start) / 1000 + "toDraw");
 
+    for (String res : this.results) {
+      System.out.println(res);
+    }
+
+
+    System.out
+        .println("Overalltime " + (double) (System.currentTimeMillis() - this.start) / 1000 + "s");
+
+    System.out.println("------------");
   }
 
   public void applyGame(int diff2) {
@@ -40,6 +54,11 @@ public class ExperimentInfo {
     } else {
       this.draws++;
     }
+  }
+
+  public void addGame(String calculateScores) {
+    this.results.add(calculateScores);
+
   }
 
 

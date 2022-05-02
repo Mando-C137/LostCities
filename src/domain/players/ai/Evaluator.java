@@ -290,7 +290,7 @@ public class Evaluator {
    * 
    * @return
    */
-  private Optional<PlayOption> optionalDirectSuccessor() {
+  public Optional<PlayOption> optionalDirectSuccessor() {
 
     PlayOption p = null;
 
@@ -611,7 +611,7 @@ public class Evaluator {
 
     List<AbstractCard> usableHandCards;
 
-    // TODO am ende auch sehr schlechte plays machen
+
 
     usableHandCards = this.ai.getPlayer().getHandKarten().stream()
         .filter(pre -> stack.isEmpty() ? pre.getColor() == col

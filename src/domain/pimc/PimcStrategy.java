@@ -53,7 +53,7 @@ public class PimcStrategy implements PlayStrategy {
     copyGame.replaceStrategiesWithRandom();
 
     try {
-      nextAction = Pimc.pimc(copyGame, ai.getIndex(), 50);
+      nextAction = Pimc.pimc(copyGame, ai.getIndex(), 30);
     } catch (InterruptedException e) {
       System.out.println("error");
       e.printStackTrace();
