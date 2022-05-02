@@ -27,7 +27,7 @@ public class Main extends Application {
     GameScene scene = new GameScene(game);
 
     stage = arg0;
-    stage.setTitle("LOST CITIES");
+    stage.setTitle("Lost Cities");
     stage.setScene(new Scene(scene));
     stage.show();
 

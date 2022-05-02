@@ -6,7 +6,7 @@ Hallo! In diesem Ordner ist die Software aufzufinden.
 
 Für Sie relevant sind hierfür nur 2 Klassen.
 
-Die Klasse <code> domain.demo.Demogames.java </code>  dient zum Testen der Agenten untereinander. Dabei kann konfiguriert werden, welche Agenten gegeneinander antreten sollen: 
+Die Klasse <code> domain.demo.Demogames.java </code>  dient zum Testen der Agenten untereinander. Dabei kann in der Methode <code> compute() </code> konfiguriert werden, welche Agenten gegeneinander antreten sollen: 
 
 <code> 		
 		Informationset.setParameter(1);
@@ -38,7 +38,7 @@ Hierfür ist es nötig, die <code>javafx</code>-libray zu installieren und in de
 
 Relevant hierfür ist die Klasse <code>userinterface.Main.java</code>. 
 
-Analog zu der oben genannten Konfiguration können Sie hier den gegnerischen Agenten einstellen: 
+Analog zu der oben genannten Konfiguration können Sie hier den gegnerischen Agenten in der Methode <code> start() </code> einstellen: 
 
 <code>
 
@@ -52,11 +52,13 @@ Analog zu der oben genannten Konfiguration können Sie hier den gegnerischen Age
 
     // game = game.RandomvsMe();
 
-    // game = PimcStrategy.PIMCvsHuman();</code>
+    // game = PimcStrategy.PIMCvsHuman();
+    
+</code>
 
 Anschließend muss nur die main-Methode ausgeführt werden und die GUI startet.
 
-Durch das Klicken auf ''opponent'' spielt der Gegner den ersten Zug. Danach ist der Spielablauf ziemlich selbsterklärend. Nachdem ein Spiel vollendet ist, kann ein neues Spiel gestartet werden; in diesem ist jedoch immer der Regelbasierte Agent der Gegner.
+Durch das Klicken auf ''start'' spielt der Gegner den ersten Zug. Danach ist der Spielablauf ziemlich selbsterklärend. Nachdem ein Spiel vollendet ist, kann ein neues Spiel gestartet werden; in diesem ist jedoch immer der Regelbasierte Agent der Gegner.
 
 Wenn gegen einen MCTS-Agenten gespielt wird, dann braucht dieser bis zu zehn Sekunden Zeit, um sich für eine Aktion zu entscheiden. Währenddessen freezet die GUI und ist unresponsive, was aber keine Probleme machen sollte!
 

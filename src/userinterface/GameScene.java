@@ -62,7 +62,7 @@ public class GameScene extends AnchorPane {
     super();
     this.setPrefHeight(600);
     this.setPrefWidth(600);
-    initStaepels();
+    this.initStaepels();
     this.game = theGame;
     this.drawMode = false;
     this.playMode = false;
@@ -71,17 +71,13 @@ public class GameScene extends AnchorPane {
     this.middle = new AblageLabels(game, this);
     this.myEx = new MyExpeditionenLabels(myPlayer, this);
     this.oppEx = new OppExpeditionenLabels(this, opp);
-
-    update();
-    addButton();
-
+    this.update();
+    this.addButton();
     this.initLastPlay();
 
   }
 
   private void initLastPlay() {
-
-    System.out.println("sadf");
 
     if (this.lastPlayLabel == null)
       this.lastPlayLabel = new Label("LastPLay");
@@ -102,7 +98,7 @@ public class GameScene extends AnchorPane {
   }
 
   private void addButton() {
-    Button b = new Button("OPPONENT");
+    Button b = new Button("Start");
     this.getChildren().add(b);
     b.setLayoutX(20);
     b.setLayoutY(15);
@@ -112,10 +108,7 @@ public class GameScene extends AnchorPane {
       @Override
       public void handle(ActionEvent e) {
 
-        // ProgressIndicator progress = new ProgressIndicator();
-        // temp.getChildren().add(progress);
-        // progress.setLayoutX(30);
-        // progress.setLayoutY(30);
+
         WholePlay pl = game.externalRound(opp);
         temp.updateLastPlay(pl);
         playMode = true;
@@ -163,7 +156,7 @@ public class GameScene extends AnchorPane {
 
 
       this.initStaepels();
-      this.game = Game.SimpleVsMe();
+      this.game = Game.ISMCTSvsME();
       this.drawMode = false;
       this.playMode = false;
       this.myPlayer = game.getPlayers().get(1);

@@ -99,6 +99,19 @@ public class Game {
     return g;
   }
 
+
+  public static Game ISMCTSvsCheat() {
+    Game g = Game.twoWithoutStrategies();
+
+    AiPlayer one = g.getPlayers().get(0);
+    one.setStrategy(new InformationSetStrategy(one));
+    AiPlayer two = g.getPlayers().get(1);
+    two.setStrategy(new CheatMCTSStrategy(two));
+
+
+    return g;
+  }
+
   public static Game SimpleVsMe() {
 
     Game g = Game.twoWithoutStrategies();
