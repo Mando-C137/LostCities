@@ -28,13 +28,13 @@ Die Klasse <code> domain.demo.Demogames.java </code>  dient zum Testen der Agent
     // g = Game.SIMPLEvsRandom();
 </code>
 
-Wie hier dargestellt, muss für die Konfiguration die entsprechende Zeile ein- bzw. die anderen auskommentiert werden. Zustätzlich kann der Parameter <code> C </code> der UCT-Formel gesetzt werden. 
+Wie hier dargestellt, muss für die Konfiguration die entsprechende Zeile ein- bzw. die anderen auskommentiert werden. Zustätzlich kann der Parameter <code>C</code> der UCT-Formel gesetzt werden. 
 
 Nach Ausführen der main-Methode wird ein Spiel ausgeführt, dabei spielen die Agente abwechselnd gegeneinander. Der Spielstand, die Handkarten, die ausgewählten Aktionen werden dabei in der Kommandozeile ausgegeben.
 
 ## Agenten vs Mensch 
 
-Hierfür ist es nötig, die <code>javafx</code>-libray zu installieren und in den BuildPath miteinbeziehen.
+Hierfür ist es nötig, die <code>javafx</code>-libray zu installieren und in den module path miteinbeziehen.
 
 Relevant hierfür ist die Klasse <code>userinterface.Main.java</code>. 
 

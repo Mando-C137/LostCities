@@ -156,7 +156,7 @@ public class GameScene extends AnchorPane {
 
 
       this.initStaepels();
-      this.game = Game.ISMCTSvsME();
+      this.game = Game.SimpleVsMe();
       this.drawMode = false;
       this.playMode = false;
       this.myPlayer = game.getPlayers().get(1);
