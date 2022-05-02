@@ -24,9 +24,9 @@ public class Demogames {
 
     // g = Game.PIMCvsSIMPLE();
 
-    g = Game.ISMCTSvsCheat();
+    // g = Game.ISMCTSvsCheat();
 
-    // g = Game.SIMPLEvsRandom();
+    g = Game.SIMPLEvsRandom();
 
 
     while (!g.getGameEnd() && g.getZuege() < 100) {
